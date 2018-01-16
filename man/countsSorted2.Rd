@@ -18,8 +18,10 @@ matrix
 \description{
 The HOS, HCT116, and A375 cell lines were FACS sorted, either as
 singlets or multiplets, and sequenced. Multiplets were sequenced into known
-combinations in order to have previousl knowledge regarding which connections
-should be contained in each multiplet.
+combinations in order to know which connections are contained in each
+multiplet. This dataset is used in conjunction with the
+inst/sortedMultiplets20171116/*.Rmd analyses in the sp.scRNAseqTesting
+package.
 }
 \examples{
 countsSorted2
