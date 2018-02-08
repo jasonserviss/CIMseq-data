@@ -1,0 +1,84 @@
+---
+title: "Package functions to filter HTSeq counts data"
+author: "Jason Serviss"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Vignette Title}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+An example of how counts are typically filtered using the package functions.
+
+```{r}
+library(sp.scRNAseqData)
+library(printr)
+```
+
+Load the counts data.
+This would usually be done with the read.table function but here we use a small test dataset that represents typical input of HTSeq generated counts.
+
+```{r}
+data(testingCounts)
+testingCounts
+```
+
+Move the gene names to rownames.
+```{r}
+testingCounts <- moveGenesToRownames(testingCounts)
+testingCounts
+```
+
+Remove the .htseq suffix from colnames.
+```{r}
+testingCounts <- removeHTSEQsuffix(testingCounts)
+testingCounts
+```
+
+Label samples as singlets or multiplets.
+```{r}
+testingCounts <- labelSingletsAndMultiplets(testingCounts, LETTERS[1:5])
+testingCounts
+```
+
+Detect non-genes reported by HTSeq.
+```{r}
+nonGenes <- detectNonGenes(testingCounts)
+nonGenes
+testingCounts <- testingCounts[!nonGenes, ]
+testingCounts
+```
+
+Detect ERCC reads.
+```{r}
+ercc <- detectERCCreads(testingCounts)
+ercc
+testingERCC <- testingCounts[ercc, ]
+testingCounts <- testingCounts[!ercc, ]
+testingERCC
+testingCounts
+```
+
+Detect low quality genes.
+```{r}
+lqg <- detectLowQualityGenes(testingCounts, 18)
+lqg
+testingCounts <- testingCounts[lqg, ]
+testingCounts
+```
+
+Detect low quality cells (samples).
+```{r}
+lqc <- detectLowQualityCells(testingCounts, 14)
+lqc
+testingCounts <- testingCounts[, lqc]
+testingCounts
+```
+
+Convert counts to a matrix.
+```{r}
+testingCounts <- convertCountsToMatrix(testingCounts)
+testingCounts
+```
+

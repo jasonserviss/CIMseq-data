@@ -1,0 +1,70 @@
+packages <- c(
+  "sp.scRNAseq",
+  "sp.scRNAseqTesting",
+  "tidyverse"
+)
+purrr::walk(packages, library, character.only = TRUE)
+rm(packages)
+
+#load counts
+path <- './inst/rawData/count_table_180112.txt'
+data <- read.table(path, header = TRUE, sep = "\t") #THERE ARE A LOT OF NA'S IN THIS DATA...
+
+#move genes to rownames
+rownames(data) <- data$HGN
+data$HGN <- NULL
+
+#label singlets and multiplets
+#martin already named these so I am just switching to the naming convention
+#I typically use.
+mul <- stringr::str_detect(colnames(data), "Doublet")
+colnames(data) <- ifelse(
+  mul,
+  paste("m.", colnames(data), sep = ""),
+  paste("s.", colnames(data), sep = "")
+)
+colnames(data) <- stringr::str_replace(colnames(data), "\\.Singlet", "")
+colnames(data) <- stringr::str_replace(colnames(data), "\\.Doublet", "")
+
+#remove "htseq" suffix
+colnames(data) <- stringr::str_replace(colnames(data), "(.*)\\.htseq$", "\\1")
+
+#extract ERCC
+ercc <- str_detect(rownames(data), "^ERCC\\-[0-9]*$")
+countsERCC <- data[ercc, ]
+
+if(dim(countsERCC)[1] != 92) {
+  stop("Couldn't detect all ERCC reads.")
+}
+
+data <- data[!ercc, ]
+
+#remove "bad" genes
+data <- data[rowSums(data) > 0, ]
+
+nonGenes <- c(
+  "__no_feature", "__ambiguous", "__too_low_aQual",
+  "__not_aligned", "__alignment_not_unique"
+)
+
+data <- data[!rownames(data) %in% nonGenes, ]
+
+#remove cells with poor coverage
+mincount <- 1e5
+countsERCC <- countsERCC[, colSums(data) > mincount]
+data <- data[, colSums(data) > mincount]
+
+data <- as.matrix(data)
+countsERCC <- as.matrix(countsERCC)
+
+#rename and save
+countsSorted2 <- data
+countsSortedERCC2 <- countsERCC
+save(
+  countsSorted2,
+  countsSortedERCC2,
+  file = "./data/countsSorted2.rda",
+  compress = "bzip2"
+)
+
+#source('./inst/rawData/counts_171116.R')
