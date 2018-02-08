@@ -8,6 +8,8 @@ rm(packages)
 
 #load counts
 #remove columns with "SI1.Singlet.1" in colnames. Early miSeq. Duplicated samples.
+#several samples are only NA. find with apply(counts, 2, function(x) all(is.na(x)))
+#Regev data identified by "SRR" in colnames
 #singlets grepl("SRR", colnames(counts)) | grepl("Singlet", colnames(counts)) | grepl("NJA00102", colnames(counts)) | grepl("NJA00103", colnames(counts)) | grepl("NJA00104", colnames(counts)) | grepl("NJA00109", colnames(counts)) | grepl("NJA00204", colnames(counts)) | grepl("NJA00205", colnames(counts)) | grepl("NJA00206", colnames(counts))
 
 path <- './inst/rawData/GFPmouse/count_table_180112.txt'
