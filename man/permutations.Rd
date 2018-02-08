@@ -22,6 +22,6 @@ spSwarm object and the output from the \code{permuteSwarm} function were
 saved.
 }
 \examples{
-data(sObjPermutations)
-data(permutations)
+#data(sObjPermutations)
+#data(permutations)
 }

@@ -24,7 +24,7 @@ inst/sortedMultiplets20171116/*.Rmd analyses in the sp.scRNAseqTesting
 package.
 }
 \examples{
-countsSorted2
-countsSortedERCC2
+#countsSorted2
+#countsSortedERCC2
 
 }

@@ -19,6 +19,6 @@ Matrix of counts.
 Fetal pancreas counts and ERCC data.
 }
 \examples{
-data(countsFp)
-data(countsErccFp)
+#data(countsFp)
+#data(countsErccFp)
 }
