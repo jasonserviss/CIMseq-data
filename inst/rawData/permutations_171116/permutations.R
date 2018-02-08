@@ -1,5 +1,5 @@
 #run from package root
-#script('inst/rawData/permutations_171116/permutations.R')
+#source('inst/rawData/permutations_171116/permutations.R')
 
 packages <- c('sp.scRNAseq', 'sp.scRNAseqTesting', 'sp.scRNAseqData', 'stringr', 'dplyr', 'tibble')
 purrr::walk(packages, library, character.only = TRUE)

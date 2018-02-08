@@ -1,5 +1,5 @@
 #run from package root
-#script('inst/rawData/fetalPancreas/fetalPancreasCounts.R')
+#source('inst/rawData/fetalPancreas/fetalPancreasCounts.R')
 
 library(sp.scRNAseqData)
 

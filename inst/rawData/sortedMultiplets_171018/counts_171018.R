@@ -1,5 +1,5 @@
 #run from package root
-#script('inst/rawData/sortedMultiplets_171018/counts_171018.R')
+#source('inst/rawData/sortedMultiplets_171018/counts_171018.R')
 #NJB00101 is the singlets plate, NJB00103 is doublets (according to your scheme).
 
 path <- './inst/rawData/sortedMultiplets_171018/counts_171018.txt'

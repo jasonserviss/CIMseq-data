@@ -2,9 +2,11 @@
 #source('./inst/rawData/sortedMultiplets_171116/counts_171116.R')
 
 #load counts (171116 are prefixed with NJB00201 and NJB00204)
-path <- './inst/rawData/counts_171116.txt'
+path <- './inst/rawData/sortedMultiplets_171116/counts_171116.txt'
 counts <- read.table(path, header = TRUE)
-counts <- counts[, grepl("NJB00201", colnames(counts)) | grepl("NJB00204", colnames(counts))]
+bool1 <- grepl("NJB00201", colnames(counts)) | grepl("NJB00204", colnames(counts))
+bool2 <- colnames(counts) == "HGN"
+counts <- counts[, bool1 | bool2]
 
 #move genes to rownames
 counts <- moveGenesToRownames(counts)

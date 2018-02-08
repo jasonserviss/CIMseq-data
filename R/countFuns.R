@@ -53,7 +53,7 @@ convertCountsToMatrix <- function(counts) {
   if(class(counts) != "data.frame") {
     stop("Counts is not a data.frame")
   }
-  if(!all(sapply(counts, class) == "numeric")) {
+  if(!all(sapply(counts, class) %in% c("numeric", "integer"))) {
     stop("Non-numeric columns detected. Should gene names be moved to rownames?")
   }
   as.matrix(counts)
@@ -84,7 +84,7 @@ labelSingletsAndMultiplets <- function(counts, ids) {
   if(is.null(colnames(counts))) {
     stop("is.null(colnames(counts)) returned TRUE.")
   }
-  if(!all(sapply(counts, class) == "numeric")) {
+  if(!all(sapply(counts, class) %in% c("numeric", "integer"))) {
     stop("Non-numeric columns detected. Should gene names be moved to rownames?")
   }
   if(class(ids) != "character") {
