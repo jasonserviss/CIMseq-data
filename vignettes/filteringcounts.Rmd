@@ -20,8 +20,7 @@ Load the counts data.
 This would usually be done with the read.table function but here we use a small test dataset that represents typical input of HTSeq generated counts.
 
 ```{r}
-data(testingCounts)
-testingCounts
+sp.scRNAseqData::testingCounts
 ```
 
 Move the gene names to rownames.

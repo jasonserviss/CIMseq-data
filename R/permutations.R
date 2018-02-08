@@ -6,13 +6,15 @@
 #' spSwarm object and the output from the \code{permuteSwarm} function were
 #' saved.
 #'
+#' @title spSwarm object with "real" data from permutation analysis.
 #' @docType data
 #' @name sObjPermutations
 #' @format An spSwarm object containing the "real" results.
-#' @return The spSwarm object containing the "real" data.
+#' @usage data(sObjPermutations)
+#' @keywords datasets
 #' @examples
 #' data(sObjPermutations)
-NULL
+"sObjPermutations"
 
 #' Permutations of the countsSorted2 dataset.
 #'
@@ -22,11 +24,13 @@ NULL
 #' spSwarm object and the output from the \code{permuteSwarm} function were
 #' saved.
 #'
+#' @title Permutation results from sorted multiplets experiment 2.
 #' @docType data
 #' @name permutations
 #' @format A list containing the permutation results. Can be processed into tidy
 #' format with the \code{tidyPermutationData} function.
-#' @return A list containing the permuted data.
+#' @usage data(permutations)
+#' @keywords datasets
 #' @examples
 #' data(permutations)
-NULL
+"permutations"

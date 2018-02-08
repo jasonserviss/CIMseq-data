@@ -3,13 +3,16 @@
 \docType{data}
 \name{permutations}
 \alias{permutations}
-\title{Permutations of the countsSorted2 dataset.}
+\title{Permutation results from sorted multiplets experiment 2.}
 \format{A list containing the permutation results. Can be processed into tidy
 format with the \code{tidyPermutationData} function.}
-\value{
-A list containing the permuted data.
+\usage{
+data(permutations)
 }
 \description{
+Permutations of the countsSorted2 dataset.
+}
+\details{
 The countsSorted2 dataset was used to run the sp.scRNAseq pipeline. The cell
 types, which are known, see \code{help(countsSorted2)}, were renamed in the
 spUnsupervised object. The \code{permuteSwarm} was then run and both the
@@ -19,3 +22,4 @@ saved.
 \examples{
 data(permutations)
 }
+\keyword{datasets}

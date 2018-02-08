@@ -3,16 +3,19 @@
 \docType{data}
 \name{countsSorted1}
 \alias{countsSorted1}
-\title{Counts and ERCC matrix for sorted cell lines.}
+\title{Counts data for sorted multiplets; experiment 1.}
 \format{Matrix containing counts with:
 \describe{
 \item{rownames}{Gene names}
 \item{colnames}{Samples/cells}
 }}
-\value{
-matrix
+\usage{
+data(countsSorted1)
 }
 \description{
+Counts and ERCC matrix for sorted cell lines.
+}
+\details{
 The HOS, HCT116, and A375 cell lines were FACS sorted, either as
 singlets or multiplets, and sequenced. Multiplets were sequenced into known
 combinations in order to know which connections are contained in each
@@ -24,3 +27,4 @@ from the repeated experiment are in the countsSorted2 dataset.
 data(countsSorted1)
 
 }
+\keyword{datasets}

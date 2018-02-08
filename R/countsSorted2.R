@@ -7,6 +7,7 @@
 #' inst/sortedMultiplets20171116/*.Rmd analyses in the sp.scRNAseqTesting
 #' package.
 #'
+#' @title Counts data from sorted multiplets; experiment 2.
 #' @docType data
 #' @name countsSorted2
 #' @format Two matrices, containing counts and ERCC counts, with:
@@ -14,12 +15,11 @@
 #' \item{rownames}{Gene names}
 #' \item{colnames}{Samples/cells}
 #' }
-#' @return matrix
+#' @usage data(countsSorted2)
+#' @keywords datasets
 #' @examples
 #' data(countsSorted2)
-#'
-
-NULL
+"countsSorted2"
 
 #' Counts and ERCC matrix for sorted cell lines.
 #'
@@ -30,6 +30,7 @@ NULL
 #' inst/sortedMultiplets20171116/*.Rmd analyses in the sp.scRNAseqTesting
 #' package.
 #'
+#' @title ERCC counts data from sorted multiplets; experiment 2.
 #' @docType data
 #' @name countsSortedERCC2
 #' @format Matrix containing ERCC counts, with:
@@ -37,9 +38,9 @@ NULL
 #' \item{rownames}{Gene names}
 #' \item{colnames}{Samples/cells}
 #' }
-#' @return matrix
+#' @usage data(countsSortedERCC2)
+#' @keywords datasets
 #' @examples
 #' data(countsSortedERCC2)
 #'
-
-NULL
+"countsSortedERCC2"

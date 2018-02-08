@@ -1,23 +1,15 @@
-packages <- c(
-  "sp.scRNAseq",
-  "sp.scRNAseqTesting",
-  "tidyverse"
-)
-purrr::walk(packages, library, character.only = TRUE)
-rm(packages)
 
 #load counts
-#remove columns with "SI1.Singlet.1" in colnames. Early miSeq. Duplicated samples.
-#singlets grepl("SRR", colnames(counts)) | grepl("Singlet", colnames(counts)) | grepl("NJA00102", colnames(counts)) | grepl("NJA00103", colnames(counts)) | grepl("NJA00104", colnames(counts)) | grepl("NJA00109", colnames(counts)) | grepl("NJA00204", colnames(counts)) | grepl("NJA00205", colnames(counts)) | grepl("NJA00206", colnames(counts))
-
+# Subset Regev data using SRR in colnames
 path <- './inst/rawData/GFPmouse/count_table_180112.txt'
 counts <- read.table(path, header = TRUE, sep = "\t")
-counts <- counts[, !grepl("SI1.Singlet.1", colnames(counts))]
+counts <- counts[, grepl("SRR", colnames(counts))]
 
 #check for NAs
 if(sum(is.na(counts)) > 0) {
   stop("NAs in counts data.")
 }
+
 #move genes to rownames
 rownames(data) <- data$HGN
 data$HGN <- NULL

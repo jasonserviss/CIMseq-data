@@ -3,12 +3,15 @@
 \docType{data}
 \name{sObjPermutations}
 \alias{sObjPermutations}
-\title{Permutations of the countsSorted2 dataset.}
+\title{spSwarm object with "real" data from permutation analysis.}
 \format{An spSwarm object containing the "real" results.}
-\value{
-The spSwarm object containing the "real" data.
+\usage{
+data(sObjPermutations)
 }
 \description{
+Permutations of the countsSorted2 dataset.
+}
+\details{
 The countsSorted2 dataset was used to run the sp.scRNAseq pipeline. The cell
 types, which are known, see \code{help(countsSorted2)}, were renamed in the
 spUnsupervised object. The \code{permuteSwarm} was then run and both the
@@ -18,3 +21,4 @@ saved.
 \examples{
 data(sObjPermutations)
 }
+\keyword{datasets}

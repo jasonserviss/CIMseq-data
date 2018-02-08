@@ -3,16 +3,19 @@
 \docType{data}
 \name{countsSortedERCC2}
 \alias{countsSortedERCC2}
-\title{Counts and ERCC matrix for sorted cell lines.}
+\title{ERCC counts data from sorted multiplets; experiment 2.}
 \format{Matrix containing ERCC counts, with:
 \describe{
 \item{rownames}{Gene names}
 \item{colnames}{Samples/cells}
 }}
-\value{
-matrix
+\usage{
+data(countsSortedERCC2)
 }
 \description{
+Counts and ERCC matrix for sorted cell lines.
+}
+\details{
 The HOS, HCT116, and A375 cell lines were FACS sorted, either as
 singlets or multiplets, and sequenced. Multiplets were sequenced into known
 combinations in order to know which connections are contained in each
@@ -24,3 +27,4 @@ package.
 data(countsSortedERCC2)
 
 }
+\keyword{datasets}

@@ -3,14 +3,14 @@
 \docType{data}
 \name{countsFp}
 \alias{countsFp}
-\title{Fetal pancreas counts and ERCC reads data.}
+\title{Fetal pancreas counts data.}
 \format{matrix
 \describe{
     \item{rownames}{Gene names. ERCC identified with "^ERCC-[0-9]*"}
     \item{colnames}{Samples. Singlets prefixed with "s" and multiplets "m".}
 }}
-\value{
-Matrix of counts.
+\usage{
+data(countsFp)
 }
 \description{
 Fetal pancreas counts and ERCC data.
@@ -18,3 +18,4 @@ Fetal pancreas counts and ERCC data.
 \examples{
 data(countsFp)
 }
+\keyword{datasets}

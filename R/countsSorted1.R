@@ -7,6 +7,7 @@
 #' many of these cells and the sort and sequencing was repeated. The results
 #' from the repeated experiment are in the countsSorted2 dataset.
 #'
+#' @title Counts data for sorted multiplets; experiment 1.
 #' @docType data
 #' @name countsSorted1
 #' @format Matrix containing counts with:
@@ -14,11 +15,12 @@
 #' \item{rownames}{Gene names}
 #' \item{colnames}{Samples/cells}
 #' }
-#' @return matrix
+#' @usage data(countsSorted1)
+#' @keywords datasets
 #' @examples
 #' data(countsSorted1)
 #'
-NULL
+"countsSorted1"
 
 #' Counts and ERCC matrix for sorted cell lines.
 #'
@@ -29,6 +31,7 @@ NULL
 #' many of these cells and the sort and sequencing was repeated. The results
 #' from the repeated experiment are in the countsSorted2 dataset.
 #'
+#' @title ERCC counts data for sorted multiplets; experiment 1.
 #' @docType data
 #' @name countsSortedERCC1
 #' @format Matrix containing ERCC counts, with:
@@ -36,9 +39,9 @@ NULL
 #' \item{rownames}{Gene names}
 #' \item{colnames}{Samples/cells}
 #' }
-#' @return matrix
+#' @usage data(countsSortedERCC1)
+#' @keywords datasets
 #' @examples
 #' data(countsSortedERCC1)
 #'
-NULL
-
+"countsSortedERCC1"

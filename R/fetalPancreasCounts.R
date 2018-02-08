@@ -1,6 +1,6 @@
 #' Fetal pancreas counts and ERCC data.
 #'
-#' @title Fetal pancreas counts and ERCC reads data.
+#' @title Fetal pancreas counts data.
 #' @docType data
 #' @name countsFp
 #' @format matrix
@@ -8,14 +8,15 @@
 #'     \item{rownames}{Gene names. ERCC identified with "^ERCC-[0-9]*"}
 #'     \item{colnames}{Samples. Singlets prefixed with "s" and multiplets "m".}
 #' }
-#' @return Matrix of counts.
+#' @usage data(countsFp)
+#' @keywords datasets
 #' @examples
 #' data(countsFp)
-NULL
+"countsFp"
 
 #' Fetal pancreas counts and ERCC data.
 #'
-#' @title Fetal pancreas counts and ERCC reads data.
+#' @title Fetal pancreas ERCC counts data.
 #' @docType data
 #' @name countsErccFp
 #' @format matrix
@@ -23,7 +24,8 @@ NULL
 #'     \item{rownames}{Gene names. ERCC identified with "^ERCC-[0-9]*"}
 #'     \item{colnames}{Samples. Singlets prefixed with "s" and multiplets "m".}
 #' }
-#' @return Matrix of counts.
+#' @usage data(countsErccFp)
+#' @keywords datasets
 #' @examples
 #' data(countsErccFp)
-NULL
+"countsErccFp"
