@@ -20,7 +20,7 @@ columns that contain multiplets.
 \examples{
 
 counts <- data.frame(a = runif(26), b = runif(26), c = runif(26))
-labelSingletsAndMultiplets(counts, ids = c("a", "b")
+labelSingletsAndMultiplets(counts, ids = c("a", "b"))
 
 }
 \author{

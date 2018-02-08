@@ -18,7 +18,7 @@ the old column.
 
 counts <- data.frame(LETTERS, a = runif(26, 1, 100))
 moveGenesToRownames(counts)
-counts <- m
+
 }
 \author{
 Jason Serviss

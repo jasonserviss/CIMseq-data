@@ -11,6 +11,6 @@
 #' @usage countsFp or countsErccFp
 #' @return Matrix of counts.
 #' @examples
-#' data(countsFp)
-#' data(countsErccFp)
+#' #data(countsFp)
+#' #data(countsErccFp)
 NULL

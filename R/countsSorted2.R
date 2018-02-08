@@ -17,8 +17,8 @@
 #' @usage countsSorted2 or countsSortedERCC2
 #' @return matrix
 #' @examples
-#' countsSorted2
-#' countsSortedERCC2
+#' #countsSorted2
+#' #countsSortedERCC2
 #'
 
 NULL

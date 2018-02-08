@@ -15,6 +15,6 @@
 #' @return The spSwarm object containing the "real" data of a list containing
 #' the permuted data.
 #' @examples
-#' data(sObjPermutations)
-#' data(permutations)
+#' #data(sObjPermutations)
+#' #data(permutations)
 NULL

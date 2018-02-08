@@ -13,7 +13,7 @@
 #'
 #' counts <- data.frame(LETTERS, a = runif(26, 1, 100))
 #' moveGenesToRownames(counts)
-#' counts <- m
+#'
 NULL
 #' @export
 
@@ -75,7 +75,7 @@ convertCountsToMatrix <- function(counts) {
 #' @examples
 #'
 #' counts <- data.frame(a = runif(26), b = runif(26), c = runif(26))
-#' labelSingletsAndMultiplets(counts, ids = c("a", "b")
+#' labelSingletsAndMultiplets(counts, ids = c("a", "b"))
 #'
 NULL
 #' @export
