@@ -1,0 +1,11 @@
+#Sample .travis.yml for R projects
+
+language: r
+r: 3.3.0
+package: cache
+r_build_args: " --no-resave-data"
+r_check_args: "--timings"
+-os:
+  - linux
+  - osx
+  - windows
