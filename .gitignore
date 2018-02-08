@@ -6,3 +6,4 @@
 .DS_Store
 inst/doc
 .Rapp.history
+!data/testingCounts.rda
