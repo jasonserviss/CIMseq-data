@@ -1,9 +1,9 @@
 #' Counts and ERCC matrix for sorted cell lines.
 #'
 #' The HOS, HCT116, and A375 cell lines were FACS sorted, either as
-#' singlets or multiplets, and sequenced. Multiplets were sequenced into known
-#' combinations in order to know which connections are contained in each
-#' multiplet. This dataset is used in conjunction with the
+#' singlets or multiplets, and sequenced (171116). Multiplets were sequenced
+#' into known combinations in order to know which connections are contained in
+#' each multiplet. This dataset is used in conjunction with the
 #' inst/sortedMultiplets20171116/*.Rmd analyses in the sp.scRNAseqTesting
 #' package.
 #'
@@ -15,7 +15,6 @@
 #' \item{rownames}{Gene names}
 #' \item{colnames}{Samples/cells}
 #' }
-#' @usage data(countsSorted2)
 #' @keywords datasets
 #' @examples
 #' data(countsSorted2)
@@ -24,9 +23,9 @@
 #' Counts and ERCC matrix for sorted cell lines.
 #'
 #' The HOS, HCT116, and A375 cell lines were FACS sorted, either as
-#' singlets or multiplets, and sequenced. Multiplets were sequenced into known
-#' combinations in order to know which connections are contained in each
-#' multiplet. This dataset is used in conjunction with the
+#' singlets or multiplets, and sequenced (171116). Multiplets were sequenced
+#' into known combinations in order to know which connections are contained in
+#' each multiplet. This dataset is used in conjunction with the
 #' inst/sortedMultiplets20171116/*.Rmd analyses in the sp.scRNAseqTesting
 #' package.
 #'
@@ -38,7 +37,6 @@
 #' \item{rownames}{Gene names}
 #' \item{colnames}{Samples/cells}
 #' }
-#' @usage data(countsSortedERCC2)
 #' @keywords datasets
 #' @examples
 #' data(countsSortedERCC2)

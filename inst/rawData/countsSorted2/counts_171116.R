@@ -1,5 +1,5 @@
 #run from package root
-#source('./inst/rawData/sortedMultiplets_171116/counts_171116.R')
+#source('./inst/rawData/countsSorted2/counts_171116.R')
 
 #load counts (171116 are prefixed with NJB00201 and NJB00204)
 path <- './inst/rawData/sortedMultiplets_171116/counts_171116.txt'

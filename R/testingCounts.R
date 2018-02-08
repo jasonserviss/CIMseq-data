@@ -11,7 +11,6 @@
 #' \item{rownames}{Gene names}
 #' \item{colnames}{Samples/cells}
 #' }
-#' @usage data(testingCounts)
 #' @keywords datasets
 #' @examples
 #' data(testingCounts)

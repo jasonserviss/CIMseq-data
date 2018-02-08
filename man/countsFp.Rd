@@ -10,7 +10,7 @@
     \item{colnames}{Samples. Singlets prefixed with "s" and multiplets "m".}
 }}
 \usage{
-data(countsFp)
+countsFp
 }
 \description{
 Fetal pancreas counts and ERCC data.

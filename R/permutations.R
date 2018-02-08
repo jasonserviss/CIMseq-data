@@ -10,7 +10,6 @@
 #' @docType data
 #' @name sObjPermutations
 #' @format An spSwarm object containing the "real" results.
-#' @usage data(sObjPermutations)
 #' @keywords datasets
 #' @examples
 #' data(sObjPermutations)
@@ -29,7 +28,6 @@
 #' @name permutations
 #' @format A list containing the permutation results. Can be processed into tidy
 #' format with the \code{tidyPermutationData} function.
-#' @usage data(permutations)
 #' @keywords datasets
 #' @examples
 #' data(permutations)

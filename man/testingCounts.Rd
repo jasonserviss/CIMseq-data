@@ -10,7 +10,7 @@
 \item{colnames}{Samples/cells}
 }}
 \usage{
-data(testingCounts)
+testingCounts
 }
 \description{
 Test counts.

@@ -8,7 +8,6 @@
 #'     \item{rownames}{Gene names. ERCC identified with "^ERCC-[0-9]*"}
 #'     \item{colnames}{Samples. Singlets prefixed with "s" and multiplets "m".}
 #' }
-#' @usage data(countsFp)
 #' @keywords datasets
 #' @examples
 #' data(countsFp)
@@ -24,7 +23,6 @@
 #'     \item{rownames}{Gene names. ERCC identified with "^ERCC-[0-9]*"}
 #'     \item{colnames}{Samples. Singlets prefixed with "s" and multiplets "m".}
 #' }
-#' @usage data(countsErccFp)
 #' @keywords datasets
 #' @examples
 #' data(countsErccFp)

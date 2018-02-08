@@ -10,7 +10,7 @@
 \item{colnames}{Samples/cells}
 }}
 \usage{
-data(countsSorted1)
+countsSorted1
 }
 \description{
 Counts and ERCC matrix for sorted cell lines.
@@ -20,8 +20,9 @@ The HOS, HCT116, and A375 cell lines were FACS sorted, either as
 singlets or multiplets, and sequenced. Multiplets were sequenced into known
 combinations in order to know which connections are contained in each
 multiplet. Note that many of the ERCC read fractions did not look good for
-many of these cells and the sort and sequencing was repeated. The results
-from the repeated experiment are in the countsSorted2 dataset.
+many of the cells from this experiment (171018) and the sort and sequencing
+was repeated. The results from the repeated experiment are in the
+countsSorted2 dataset.
 }
 \examples{
 data(countsSorted1)

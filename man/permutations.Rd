@@ -7,7 +7,7 @@
 \format{A list containing the permutation results. Can be processed into tidy
 format with the \code{tidyPermutationData} function.}
 \usage{
-data(permutations)
+permutations
 }
 \description{
 Permutations of the countsSorted2 dataset.

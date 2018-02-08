@@ -6,7 +6,7 @@
 \title{spSwarm object with "real" data from permutation analysis.}
 \format{An spSwarm object containing the "real" results.}
 \usage{
-data(sObjPermutations)
+sObjPermutations
 }
 \description{
 Permutations of the countsSorted2 dataset.
