@@ -12,7 +12,7 @@ will be detected. Default = 0.}
 }
 \value{
 A logical vector with length = nrow(counts) that is TRUE when the
-counts data.frame row contains a gene with rowSums > mincount.
+counts data.frame row meets both tested conditions.
 }
 \description{
 In gene expression counts data if can often be the case that some genes are

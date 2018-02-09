@@ -9,6 +9,12 @@ rownames and sample names as colnames.}
 
 \item{mincount}{numeric; A minimum colSum for which columns with a higher
 colSum will be detected. Default = 4e5.}
+
+\item{geneName}{character; The gene name to use for the quantile cutoff. This
+must be present in the rownames of the counts argument. Default is ACTB.}
+
+\item{quantile.cut}{numeric; This indicates probability at which the quantile
+cutoff will be calculated using the normal distribution.}
 }
 \value{
 A logical vector with length = ncol(counts) that is TRUE when the
@@ -19,12 +25,21 @@ It is often the case that some samples from sequencing experiments are of
 low quality, in many cases due to issues during the sample preperation stage.
 Due to the fact that these samples represent a high level of technical noise,
 it is often desirable to remove these before downstream analysis which is
-facilitated by this function.
+facilitated by this function. The function achieves this using two methods.
+First, the mincount argument detects samples whose sum across all genes is >
+mincount. Second, we utilize a house keeping gene and assume its expression
+to be normally distributed. We then detect samples where the probability of
+the expression for the house keeping gene in that sample is greater than the
+quantile.cut argument.
 }
 \examples{
 
-counts <- data.frame(runif(2e4), runif(2e4, 1, 100), runif(2e4, 1, 100))
-detectLowQualityCells(counts)
+counts <- data.frame(
+ runif(2e4),
+ runif(2e4, 1, 100),
+ row.names = paste0(letters, 1:2e4)
+)
+detectLowQualityCells(counts, geneName = "a1")
 
 }
 \author{

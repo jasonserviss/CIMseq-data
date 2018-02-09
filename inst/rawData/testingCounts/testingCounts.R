@@ -29,9 +29,16 @@ counts <- rbind(
   matrix(rnbinom((nGenes * 3) + 3, mu = 2^runif(nGenes, 0, 1), size = 1), nrow = 3)
 )
 
+#add house keeping gene
+set.seed(232343999)
+counts <- rbind(
+  matrix(rnbinom(nGenes + 1, mu = 2^runif(nGenes, 5, 5), size = 1), nrow = 1),
+  counts
+)
+
 #add names
 colnames(counts) <- paste0(LETTERS[1:ncol(counts)], ".htseq")
-rownames(counts) <- c(letters[1:11], "ERCC-1", "__alignment_not_unique")
+rownames(counts) <- c("ACTB", letters[1:11], "ERCC-1", "__alignment_not_unique")
 
 #convert to data frame
 counts <- as.data.frame(counts)

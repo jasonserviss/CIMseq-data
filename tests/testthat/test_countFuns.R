@@ -5,7 +5,7 @@ data(testingCounts)
 test_that("check moveGenesToRownames", {
 
   #setup expected data
-  e.rownames <- c(letters[1:11], "ERCC-1", "__alignment_not_unique")
+  e.rownames <- c("ACTB", letters[1:11], "ERCC-1", "__alignment_not_unique")
   
   #run function
   output <- moveGenesToRownames(testingCounts)
@@ -97,7 +97,7 @@ test_that("check detectNonGenes", {
   input <- moveGenesToRownames(testingCounts)
 
   #setup expected data
-  expected <- c(rep(FALSE, 12), TRUE)
+  expected <- c(rep(FALSE, 13), TRUE)
   
   #run function
   output <- detectNonGenes(input)
@@ -117,8 +117,8 @@ test_that("check detectLowQualityGenes", {
   input <- expect_warning(input[!detectERCCreads(input), ])
   
   #setup expected data
-  expected <- c(rep(TRUE, 10), FALSE)
-  names(expected) <- letters[1:11]
+  expected <- c(rep(TRUE, 11), FALSE)
+  names(expected) <- c("ACTB", letters[1:11])
   
   #run function
   output <- detectLowQualityGenes(input, 18)
@@ -141,7 +141,7 @@ test_that("check detectLowQualityCells", {
   names(expected) <- LETTERS[1:11]
   
   #run function
-  output <- detectLowQualityCells(input, 14)
+  output <- detectLowQualityCells(input, mincount = 30)
   
   #test
   expect_identical(output, expected)

@@ -234,7 +234,7 @@ detectNonGenes <- function(counts) {
 #' @param mincount numeric; A minimum rowSum for which rows with a higher rowSum
 #' will be detected. Default = 0.
 #' @return A logical vector with length = nrow(counts) that is TRUE when the
-#' counts data.frame row contains a gene with rowSums > mincount.
+#' counts data.frame row meets both tested conditions.
 #' @author Jason Serviss
 #' @examples
 #'
@@ -244,7 +244,10 @@ detectNonGenes <- function(counts) {
 NULL
 #' @export
 
-detectLowQualityGenes <- function(counts, mincount = 0) {
+detectLowQualityGenes <- function(
+  counts,
+  mincount = 0
+){
   #checks
   rowSums(counts) > mincount
 }
@@ -255,7 +258,12 @@ detectLowQualityGenes <- function(counts, mincount = 0) {
 #' low quality, in many cases due to issues during the sample preperation stage.
 #' Due to the fact that these samples represent a high level of technical noise,
 #' it is often desirable to remove these before downstream analysis which is
-#' facilitated by this function.
+#' facilitated by this function. The function achieves this using two methods.
+#' First, the mincount argument detects samples whose sum across all genes is >
+#' mincount. Second, we utilize a house keeping gene and assume its expression
+#' to be normally distributed. We then detect samples where the probability of
+#' the expression for the house keeping gene in that sample is greater than the
+#' quantile.cut argument.
 #'
 #' @name detectLowQualityCells
 #' @rdname detectLowQualityCells
@@ -263,18 +271,57 @@ detectLowQualityGenes <- function(counts, mincount = 0) {
 #' rownames and sample names as colnames.
 #' @param mincount numeric; A minimum colSum for which columns with a higher
 #' colSum will be detected. Default = 4e5.
+#' @param geneName character; The gene name to use for the quantile cutoff. This
+#' must be present in the rownames of the counts argument. Default is ACTB.
+#' @param quantile.cut numeric; This indicates probability at which the quantile
+#' cutoff will be calculated using the normal distribution.
 #' @return A logical vector with length = ncol(counts) that is TRUE when the
 #' counts data.frame column contains a sample with colSums > mincount.
 #' @author Jason Serviss
 #' @examples
 #'
-#' counts <- data.frame(runif(2e4), runif(2e4, 1, 100), runif(2e4, 1, 100))
-#' detectLowQualityCells(counts)
+#' counts <- data.frame(
+#'  runif(2e4),
+#'  runif(2e4, 1, 100),
+#'  row.names = paste0(letters, 1:2e4)
+#' )
+#' detectLowQualityCells(counts, geneName = "a1")
 #'
 NULL
 #' @export
 
-detectLowQualityCells <- function(counts, mincount = 4e5) {
-  #checks
-  colSums(counts) > mincount
+detectLowQualityCells <- function(
+  counts,
+  mincount = 4e5,
+  geneName = 'ACTB',
+  quantileCut = 0.001
+){
+  #input checks
+  
+  #colsums check
+  cs <- colSums(counts) > mincount
+  
+  #house keeping check
+  counts.log <- .norm.log.counts(counts)
+  cl.act <- counts.log[geneName,]
+  cl.act.m <- median(cl.act)
+  cl.act.sd <- sqrt(
+    sum((cl.act[cl.act > cl.act.m] - cl.act.m) ^ 2) /
+    (sum(cl.act > cl.act.m) - 1)
+  )
+  my.cut <- qnorm(p = quantileCut, mean = cl.act.m, sd = cl.act.sd)
+  
+  cs & counts.log[geneName, ] > my.cut
+}
+
+#calcualtes log cpm
+.norm.log.counts <- function(counts) {
+  norm.fact <- colSums(counts)
+  counts.norm <- t(apply(counts, 1, .norm, n = norm.fact))
+  counts.log <- log2(counts.norm)
+}
+
+#calculates cpm on one row
+.norm <- function(x, n) {
+  x / n * 1000000 + 1
 }
