@@ -8,6 +8,11 @@ bool1 <- grepl("NJB00201", colnames(counts)) | grepl("NJB00204", colnames(counts
 bool2 <- colnames(counts) == "HGN"
 counts <- counts[, bool1 | bool2]
 
+#check for NAs
+if(sum(is.na(counts)) > 0) {
+  stop("NAs in counts data.")
+}
+
 #move genes to rownames
 counts <- moveGenesToRownames(counts)
 

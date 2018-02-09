@@ -5,6 +5,11 @@
 path <- './inst/rawData/sortedMultiplets_171018/counts_171018.txt'
 countsMe <- read.table(path, sep = "\t", header = TRUE)
 
+#check for NAs
+if(sum(is.na(countsMe)) > 0) {
+  stop("NAs in counts data.")
+}
+
 #move genes to rownames
 countsMe <- moveGenesToRownames(countsMe)
 

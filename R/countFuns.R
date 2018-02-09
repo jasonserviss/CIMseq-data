@@ -297,13 +297,17 @@ detectLowQualityCells <- function(
   quantileCut = 0.001
 ){
   #input checks
+  ##check that geneName is in rownames counts
+  if(!geneName %in% rownames(counts)) {
+    stop("geneName is not found in rownames(counts)")
+  }
   
   #colsums check
   cs <- colSums(counts) > mincount
   
   #house keeping check
-  counts.log <- .norm.log.counts(counts)
-  cl.act <- counts.log[geneName,]
+  counts.log <- .norm.log.counts(counts[, cs])
+  cl.act <- counts.log[geneName, ]
   cl.act.m <- median(cl.act)
   cl.act.sd <- sqrt(
     sum((cl.act[cl.act > cl.act.m] - cl.act.m) ^ 2) /
@@ -311,10 +315,10 @@ detectLowQualityCells <- function(
   )
   my.cut <- qnorm(p = quantileCut, mean = cl.act.m, sd = cl.act.sd)
   
-  cs & counts.log[geneName, ] > my.cut
+  counts.log[geneName, ] > my.cut
 }
 
-#calcualtes log cpm
+#calculates log cpm
 .norm.log.counts <- function(counts) {
   norm.fact <- colSums(counts)
   counts.norm <- t(apply(counts, 1, .norm, n = norm.fact))

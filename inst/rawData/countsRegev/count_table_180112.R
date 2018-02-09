@@ -34,7 +34,7 @@ counts <- counts[!detectNonGenes(counts), ]
 counts <- counts[detectLowQualityGenes(counts), ]
 
 #remove low quality cells
-counts <- counts[, detectLowQualityCells(counts)]
+counts <- counts[, detectLowQualityCells(counts, geneName = "Actb")]
 
 #coerce to matrix
 counts <- convertCountsToMatrix(counts)
