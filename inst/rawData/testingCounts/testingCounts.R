@@ -36,6 +36,9 @@ counts <- rbind(
   counts
 )
 
+#add low quality based on house keeping gene
+counts[1, 5] <- 0
+
 #add names
 colnames(counts) <- paste0(LETTERS[1:ncol(counts)], ".htseq")
 rownames(counts) <- c("ACTB", letters[1:11], "ERCC-1", "__alignment_not_unique")

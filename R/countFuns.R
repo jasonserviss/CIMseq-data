@@ -248,8 +248,11 @@ detectLowQualityGenes <- function(
   counts,
   mincount = 0
 ){
-  #checks
-  rowSums(counts) > mincount
+  #input checks
+  
+  bool <- rowSums(counts) > mincount
+  print(paste0("Detected ", sum(bool), " low quality genes."))
+  return(bool)
 }
 
 #' detectLowQualityCells
@@ -280,15 +283,15 @@ detectLowQualityGenes <- function(
 #' @author Jason Serviss
 #' @examples
 #'
-#' counts <- data.frame(
-#'  runif(2e4),
-#'  runif(2e4, 1, 100),
-#'  row.names = paste0(letters, 1:2e4)
-#' )
+#' x <- runif(2e4)
+#' y <- runif(2e4, 1, 100)
+#' names <- paste0(letters, 1:2e4)
+#' counts <- data.frame(a = x, b = y, c = y, row.names = names)
 #' detectLowQualityCells(counts, geneName = "a1")
 #'
 NULL
 #' @export
+#' @importFrom stats median qnorm
 
 detectLowQualityCells <- function(
   counts,
@@ -302,8 +305,17 @@ detectLowQualityCells <- function(
     stop("geneName is not found in rownames(counts)")
   }
   
+  #setup output vector
+  output <- vector(mode = "logical", length = ncol(counts))
+  names(output) <- colnames(counts)
+  
   #colsums check
   cs <- colSums(counts) > mincount
+  output[cs] <- TRUE
+  
+  if(sum(cs) < 2) {
+    stop("One or less samples passed the colSums check.")
+  }
   
   #house keeping check
   counts.log <- .norm.log.counts(counts[, cs])
@@ -314,8 +326,11 @@ detectLowQualityCells <- function(
     (sum(cl.act > cl.act.m) - 1)
   )
   my.cut <- qnorm(p = quantileCut, mean = cl.act.m, sd = cl.act.sd)
+  bool <- counts.log[geneName, ] > my.cut
+  output[cs] <- cs[cs] & bool
   
-  counts.log[geneName, ] > my.cut
+  print(paste0("Detected ", sum(output), " low quality cells."))
+  return(output)
 }
 
 #calculates log cpm

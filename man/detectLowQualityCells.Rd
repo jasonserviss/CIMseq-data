@@ -34,11 +34,10 @@ quantile.cut argument.
 }
 \examples{
 
-counts <- data.frame(
- runif(2e4),
- runif(2e4, 1, 100),
- row.names = paste0(letters, 1:2e4)
-)
+x <- runif(2e4)
+y <- runif(2e4, 1, 100)
+names <- paste0(letters, 1:2e4)
+counts <- data.frame(a = x, b = y, c = y, row.names = names)
 detectLowQualityCells(counts, geneName = "a1")
 
 }

@@ -137,7 +137,7 @@ test_that("check detectLowQualityCells", {
   input <- expect_warning(input[!detectERCCreads(input), ])
   
   #setup expected data
-  expected <- c(rep(TRUE, 10), FALSE)
+  expected <- c(rep(TRUE, 4), FALSE, rep(TRUE, 5), FALSE)
   names(expected) <- LETTERS[1:11]
   
   #run function
