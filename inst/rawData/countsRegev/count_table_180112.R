@@ -3,7 +3,7 @@
 #GSE92332
 #load counts
 #Subset Regev data using SRR in colnames
-path <- './inst/rawData/GFPmouse/count_table_180112.txt'
+path <- './inst/rawData/countsMgfp/count_table_180112.txt'
 counts <- read.table(path, header = TRUE, sep = "\t")
 bool1 <- grepl("SRR", colnames(counts))
 bool2 <- colnames(counts) == "HGN"
@@ -34,7 +34,13 @@ counts <- counts[!detectNonGenes(counts), ]
 counts <- counts[detectLowQualityGenes(counts), ]
 
 #remove low quality cells
-counts <- counts[, detectLowQualityCells(counts, geneName = "Actb")]
+lqc <- detectLowQualityCells(
+  counts,
+  geneName = "Actb",
+  mincount = 5e4,
+  quantileCut = 0.01
+)
+counts <- counts[, lqc]
 
 #coerce to matrix
 counts <- convertCountsToMatrix(counts)

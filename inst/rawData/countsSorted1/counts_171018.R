@@ -2,7 +2,7 @@
 #source('inst/rawData/countsSorted1/counts_171018.R')
 #NJB00101 is the singlets plate, NJB00103 is doublets (according to your scheme).
 
-path <- './inst/rawData/sortedMultiplets_171018/counts_171018.txt'
+path <- './inst/rawData/countsSorted1/counts_171018.txt'
 countsMe <- read.table(path, sep = "\t", header = TRUE)
 
 #check for NAs
@@ -31,7 +31,11 @@ countsMe <- countsMe[!detectNonGenes(countsMe), ]
 countsMe <- countsMe[detectLowQualityGenes(countsMe), ]
 
 #remove cells with poor coverage
-lqc <- detectLowQualityCells(countsMe)
+lqc <- detectLowQualityCells(
+  countsMe,
+  mincount = 4e4,
+  quantileCut = 0.01
+)
 countsERCC <- countsERCC[, lqc]
 countsMe <- countsMe[, lqc]
 

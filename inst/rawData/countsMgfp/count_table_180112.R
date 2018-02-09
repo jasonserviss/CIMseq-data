@@ -48,7 +48,12 @@ counts <- counts[!detectNonGenes(counts), ]
 counts <- counts[detectLowQualityGenes(counts), ]
 
 #remove low quality cells
-lqc <- detectLowQualityCells(counts, geneName = "Actb")
+lqc <- detectLowQualityCells(
+  counts,
+  geneName = "Actb",
+  mincount = 5e4,
+  quantileCut = 0.01
+)
 counts <- counts[, lqc]
 countsERCC <- countsERCC[, lqc]
 

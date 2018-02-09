@@ -1,8 +1,6 @@
 #run from package root
 #source('inst/rawData/fetalPancreas/fetalPancreasCounts.R')
 
-library(sp.scRNAseqData)
-
 #fetalPancreasCounts
 #Should be 131 singlets and 69 multiplets.
 #Note: I never got the raw unfiltered counts.txt file for this from Martin.

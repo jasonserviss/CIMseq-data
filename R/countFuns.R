@@ -251,7 +251,13 @@ detectLowQualityGenes <- function(
   #input checks
   
   bool <- rowSums(counts) > mincount
-  print(paste0("Detected ", sum(bool), " low quality genes."))
+  
+  message <- paste0(
+    "Detected ", sum(!bool), " low quality genes out of ", nrow(counts),
+    " genes input (", round(100 * (sum(!bool) / nrow(counts)), digits = 2),
+    "%)."
+  )
+  print(message)
   return(bool)
 }
 
@@ -277,7 +283,7 @@ detectLowQualityGenes <- function(
 #' @param geneName character; The gene name to use for the quantile cutoff. This
 #' must be present in the rownames of the counts argument. Default is ACTB.
 #' @param quantile.cut numeric; This indicates probability at which the quantile
-#' cutoff will be calculated using the normal distribution.
+#' cutoff will be calculated using the normal distribution. Default = 0.01.
 #' @return A logical vector with length = ncol(counts) that is TRUE when the
 #' counts data.frame column contains a sample with colSums > mincount.
 #' @author Jason Serviss
@@ -297,7 +303,7 @@ detectLowQualityCells <- function(
   counts,
   mincount = 4e5,
   geneName = 'ACTB',
-  quantileCut = 0.001
+  quantileCut = 0.01
 ){
   #input checks
   ##check that geneName is in rownames counts
@@ -329,7 +335,12 @@ detectLowQualityCells <- function(
   bool <- counts.log[geneName, ] > my.cut
   output[cs] <- cs[cs] & bool
   
-  print(paste0("Detected ", sum(output), " low quality cells."))
+  message <- paste0(
+    "Detected ", sum(!output), " low quality cells out of ", ncol(counts),
+    " cells input (", round(100 * (sum(!output) / ncol(counts)), digits = 2),
+    "%)."
+  )
+  print(message)
   return(output)
 }
 
