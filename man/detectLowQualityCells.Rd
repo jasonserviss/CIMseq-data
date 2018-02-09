@@ -14,7 +14,7 @@ colSum will be detected. Default = 4e5.}
 must be present in the rownames of the counts argument. Default is ACTB.}
 
 \item{quantile.cut}{numeric; This indicates probability at which the quantile
-cutoff will be calculated using the normal distribution.}
+cutoff will be calculated using the normal distribution. Default = 0.01.}
 }
 \value{
 A logical vector with length = ncol(counts) that is TRUE when the
