@@ -13,7 +13,7 @@
 countsMgfp
 }
 \description{
-Counts and ERCC data from the GFP-Lgr5 mouse small intestine and colon.
+Counts, ERCC, and metadata from the GFP-Lgr5 mouse small intestine and colon.
 }
 \examples{
 data(countsMgfp)

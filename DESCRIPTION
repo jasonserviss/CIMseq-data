@@ -14,7 +14,10 @@ Imports:
     readxl,
     dplyr,
     stringr,
-    tibble
+    tibble,
+    openxlsx,
+    readr,
+    purrr
 Suggests: 
     testthat,
     knitr,

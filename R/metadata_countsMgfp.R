@@ -19,6 +19,7 @@
 NULL
 #' @export
 #' @importFrom dplyr "%>%" mutate if_else
+#' @importFrom purrr pmap
 
 annotateGFP <- function(data, plate, row, column) {
   
@@ -97,6 +98,8 @@ annotateTissue <- function(data, plate, tissue) {
 #'
 NULL
 #' @export
+#' @importFrom stringr str_detect str_replace str_extract
+#' @importFrom dplyr case_when
 
 renameMgfpSamples <- function(oldNames) {
   bool1 <- str_detect(oldNames, "GFPneg.C1.Singlet.4")

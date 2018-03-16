@@ -2,6 +2,8 @@
 #source('inst/rawData/countsMgfp/count_table_180112.R')
 
 library(sp.scRNAseqData)
+library(stringr)
+library(dplyr)
 
 #load counts
 #several samples are only NA. find with table(apply(counts, 2, function(x) all(is.na(x))))
@@ -101,7 +103,8 @@ annotateTissue(
     "colon", "SI", "colon", "colon", "SI", "SI", "SI", "SI", "colon", "colon",
     "colon", "colon", "colon"
   )
-)
+) %>%
+mutate(cellNumber = if_else(str_detect(sample, "^s"), "Singlet", "Multiplet"))
 
 #rename and save
 countsMgfp <- counts

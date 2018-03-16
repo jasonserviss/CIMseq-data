@@ -13,7 +13,7 @@
 countsSorted2
 }
 \description{
-Counts and ERCC matrix for sorted cell lines.
+Counts, ERCC, and metadata for sorted cell lines.
 }
 \details{
 The HOS, HCT116, and A375 cell lines were FACS sorted, either as
