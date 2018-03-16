@@ -46,12 +46,44 @@ countsERCC <- countsERCC[, lqc]
 counts <- convertCountsToMatrix(counts)
 countsERCC <- convertCountsToMatrix(countsERCC)
 
+#setup metadata
+multiplets <- c(
+  c(rep("A375-HCT116", 3), rep("HCT116-HOS", 2), rep("A375-HOS", 3)),
+  c(rep("A375-HCT116", 3), rep("HCT116-HOS", 2), rep("A375-HOS", 3)),
+  c(rep("A375-HCT116", 2), rep("HCT116-HOS", 3), rep("A375-HOS", 3)),
+  c(rep("A375-HCT116", 2), rep("HCT116-HOS", 3), rep("A375-HOS", 3)),
+  c(rep("A375-HCT116-HOS", 3), rep("HCT116-HCT116-HOS", 2), rep("A375-HOS-HOS", 3)),
+  c(rep("A375-HCT116-HOS", 3), rep("HCT116-HCT116-HOS", 2), rep("A375-HOS-HOS", 3)),
+  c(rep("A375-HCT116-HOS", 2), rep("HCT116-HCT116-HOS", 3), rep("A375-HOS-HOS", 3)),
+  c(rep("A375-HCT116-HOS", 2), rep("HCT116-HCT116-HOS", 3), rep("A375-HOS-HOS", 3)),
+  c(rep("A375-HOS-HOS-HOS", 3), rep("A375-A375-HCT116-HCT116", 2), rep("A375-A375-HCT116-HOS", 3)),
+  c(rep("A375-HOS-HOS-HOS", 3), rep("A375-A375-HCT116-HCT116", 2), rep("A375-A375-HCT116-HOS", 3)),
+  c(rep("A375-HOS-HOS-HOS", 2), rep("A375-A375-HCT116-HCT116", 3), rep("A375-A375-HCT116-HOS", 3)),
+  c(rep("A375-HOS-HOS-HOS", 2), rep("A375-A375-HCT116-HCT116", 3), rep("A375-A375-HCT116-HOS", 3))
+)
+
+cols <- c("01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12")
+rows <- LETTERS[1:8]
+names <- paste0("m.NJB00204.", rep(rows, 12), sort(rep(cols, 8)))
+
+#make plate data
+plateData <- tibble(
+  row = rep(rows, 12), column = sort(rep(cols, 8)),
+  multipletName = names, multipletComposition = multiplets
+) %>%
+
+mutate(connections = str_split(multipletComposition, "-")) %>%
+mutate(connections = {map(.$connections, combn, 2)}) %>%
+filter(plateData, multipletName %in% colnames(countsSorted2))
+
 #rename and save
 countsSorted2 <- counts
 countsSortedERCC2 <- countsERCC
+countsSortedMeta2 <- plateData
 save(
   countsSorted2,
   countsSortedERCC2,
+  countsSortedMeta2,
   file = "./data/countsSorted2.rda",
   compress = "bzip2"
 )

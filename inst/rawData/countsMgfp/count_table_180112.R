@@ -1,6 +1,8 @@
 #run from package root
 #source('inst/rawData/countsMgfp/count_table_180112.R')
 
+library(sp.scRNAseqData)
+
 #load counts
 #remove columns with "SI1.Singlet.1" in colnames. Early miSeq. Duplicated samples.
 #several samples are only NA. find with apply(counts, 2, function(x) all(is.na(x)))
@@ -8,11 +10,12 @@
 
 path <- './inst/rawData/countsMgfp/count_table_180112.txt'
 counts <- read.table(path, header = TRUE, sep = "\t")
+#bool2 <- !grepl("SRR", colnames(counts)) #Regev data
+#bool4 <- "HGN" %in% colnames(counts)
+#counts <- counts[, bool2 & bool4]
 bool1 <- !grepl("SI1.Singlet.1", colnames(counts)) #old miSeq data
-bool2 <- !grepl("SRR", colnames(counts)) #Regev data
 bool3 <- !apply(counts, 2, function(x) all(is.na(x))) #samples without counts
-bool4 <- "HGN" %in% colnames(counts)
-counts <- counts[, bool1 & bool2 & bool3 & bool4]
+counts <- counts[, bool1 & bool3]
 
 #check for NAs
 if(sum(is.na(counts)) > 0) {
