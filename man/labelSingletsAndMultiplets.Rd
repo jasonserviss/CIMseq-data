@@ -4,14 +4,16 @@
 \alias{labelSingletsAndMultiplets}
 \title{labelSingletsAndMultiplets}
 \arguments{
-\item{counts}{data.frame; A data frame with counts data.}
+\item{data}{data.frame or character; A data frame with sample IDs as colnames
+or a vector of sample IDs.}
 
 \item{ids}{character; a character vector of regex statments used to indicate
 colnames of columns that contain SINGLETS.}
 }
 \value{
-The counts data.frame with the appropriate prefix attatched to the
- column names. Throws a warning if no singlets are detected.
+If data is of class data.frame colnames are modified in place with
+the appropriate prefix attatched. If data is of class character, the modified
+character vector is returned. Throws a warning if no singlets are detected.
 }
 \description{
 Adds the prefix "s." to colnames of columns that contain singlets and "m." to

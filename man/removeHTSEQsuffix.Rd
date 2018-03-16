@@ -4,7 +4,8 @@
 \alias{removeHTSEQsuffix}
 \title{removeHTSEQsuffix}
 \arguments{
-\item{counts}{data.frame; A data frame with counts data.}
+\item{data}{data.frame or character; A data frame with sample IDs as colnames
+or a vector of sample IDs.}
 }
 \value{
 The counts data.frame with the ".htseq" suffix removed from the

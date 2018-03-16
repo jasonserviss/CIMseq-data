@@ -7,14 +7,14 @@
 \item{data}{tibble; A tibble containing the plate, row, and column
 designation for the samples to be annotated.}
 
-\item{plate}{character; A character string indicating the plate variable
-where samples to be annotated are located.}
+\item{plate}{list; A list where each element is a character vector indicating
+the plate where samples to be annotated are located.}
 
-\item{row}{numeric; A numeric vector indicating the rows that are GFP
-positive.}
+\item{row}{list; A list where each element is a numeric vector indicating the
+rows that are GFP positive in the corresponding plate.}
 
-\item{column}{numeric; A numeric vector indicating the columns that are GFP
-positive.}
+\item{column}{list; A list where each element is a numeric vector indicating
+the columns that are GFP positive in the corresponding plate.}
 }
 \value{
 The metadata tibble with an additional column indicating GFP staus.

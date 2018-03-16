@@ -4,18 +4,18 @@
 library(sp.scRNAseqData)
 
 #load counts
-#remove columns with "SI1.Singlet.1" in colnames. Early miSeq. Duplicated samples.
-#several samples are only NA. find with apply(counts, 2, function(x) all(is.na(x)))
+#several samples are only NA. find with table(apply(counts, 2, function(x) all(is.na(x))))
 #Regev data identified by "SRR" in colnames
 
-path <- './inst/rawData/countsMgfp/count_table_180112.txt'
+#path <- './inst/rawData/countsMgfp/count_table_180112.txt'
+path <- './inst/rawData/countsMgfp/counts_table_180316.txt'
 counts <- read.table(path, header = TRUE, sep = "\t")
 #bool2 <- !grepl("SRR", colnames(counts)) #Regev data
 #bool4 <- "HGN" %in% colnames(counts)
 #counts <- counts[, bool2 & bool4]
-bool1 <- !grepl("SI1.Singlet.1", colnames(counts)) #old miSeq data
-bool3 <- !apply(counts, 2, function(x) all(is.na(x))) #samples without counts
-counts <- counts[, bool1 & bool3]
+#bool1 <- !grepl("SI1.Singlet.1", colnames(counts)) #old miSeq data (should be removed now)
+#bool3 <- !apply(counts, 2, function(x) all(is.na(x))) #samples without counts (should be resolved now)
+#counts <- counts[, bool1 & bool3]
 
 #check for NAs
 if(sum(is.na(counts)) > 0) {
@@ -26,7 +26,7 @@ if(sum(is.na(counts)) > 0) {
 counts <- moveGenesToRownames(counts)
 
 #remove "htseq" suffix
-counts <- removeHTSEQsuffix(counts)
+#counts <- removeHTSEQsuffix(counts)
 
 #label singlets and multiplets
 ids <- c(
@@ -35,9 +35,8 @@ ids <- c(
 )
 counts <- labelSingletsAndMultiplets(counts, ids)
 
-#remove old singlet multiplet specification
-colnames(counts) <- gsub("Singlet\\.", "", colnames(counts))
-colnames(counts) <- gsub("Doublet\\.", "", colnames(counts))
+#remame samples with old nomenclature
+colnames(counts) <- renameMgfpSamples(colnames(counts))
 
 #extract ERCC
 ercc <- detectERCCreads(counts)
@@ -54,7 +53,7 @@ counts <- counts[detectLowQualityGenes(counts), ]
 lqc <- detectLowQualityCells(
   counts,
   geneName = "Actb",
-  mincount = 5e4,
+  mincount = 1e5,
   quantileCut = 0.01
 )
 counts <- counts[, lqc]
@@ -64,12 +63,54 @@ countsERCC <- countsERCC[, lqc]
 counts <- convertCountsToMatrix(counts)
 countsERCC <- convertCountsToMatrix(countsERCC)
 
+#prepare metadata
+plateData <- loadMetaData('./inst/rawData/countsMgfp/counts_Mgfp_meta.txt') %>%
+mutate(sample = removeHTSEQsuffix(sample)) %>%
+mutate(sample = labelSingletsAndMultiplets(
+  sample,
+  c(
+    "Singlet", "NJA00102", "NJA00103", "NJA00104",
+    "NJA00109", "NJA00204", "NJA00205", "NJA00206"
+))) %>%
+mutate(sample = renameMgfpSamples(sample)) %>%
+annotatePlate(.) %>%
+annotateRow(.) %>%
+annotateColumn(.) %>%
+annotateGFP(
+  .,
+  plate = list(c("NJA00111"), c("NJA00110"), c("NJA00103"), c("NJA00104"), c("NJA00201"), c("NJA00110")),
+row = list(1:8, 1:8, 1:8, 1:8, 1:8, 1:8),
+column = list(1:12, 1:12, 1:6, 1:6, 1:12, 7:12)
+) %>%
+mutate(GFP = if_else(plate %in% c("NJA00204", "NJA00205", "NJA00206"), NA, GFP)) %>%
+annotateMouse(
+  .,
+  plate = c(
+    "NJA00110", "NJA00101", "NJA00111", "NJA00107", "NJA00102", "NJA00103",
+    "NJA00104", "NJA00109", "NJA00201", "NJA00204", "NJA00205", "NJA00206"
+  ),
+  mouse = c(1, 1, 1, 1, 1, 1, 1, 1, 2, 2, 2, 2)
+) %>%
+annotateTissue(
+  .,
+  plate = c(
+    "NJA00110", "NJA00101", "NJA00111", "NJA00107", "NJA00102", "NJA00103",
+    "NJA00104", "NJA00109", "NJA00201", "NJA00204", "NJA00205", "NJA00206"
+  ),
+  tissue = c(
+    "colon", "SI", "colon", "colon", "SI", "SI", "SI", "SI", "colon", "colon",
+    "colon", "colon", "colon"
+  )
+)
+
 #rename and save
 countsMgfp <- counts
 countsMgfpERCC <- countsERCC
+countsMgfpMeta <- plateData
 save(
   countsMgfp,
   countsMgfpERCC,
+  countsMgfpMeta,
   file = "./data/countsMgfp.rda",
   compress = "bzip2"
 )

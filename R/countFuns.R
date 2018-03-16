@@ -66,11 +66,13 @@ convertCountsToMatrix <- function(counts) {
 #'
 #' @name labelSingletsAndMultiplets
 #' @rdname labelSingletsAndMultiplets
-#' @param counts data.frame; A data frame with counts data.
+#' @param data data.frame or character; A data frame with sample IDs as colnames
+#'  or a vector of sample IDs.
 #' @param ids character; a character vector of regex statments used to indicate
-#' colnames of columns that contain SINGLETS.
-#' @return The counts data.frame with the appropriate prefix attatched to the
-#'  column names. Throws a warning if no singlets are detected.
+#'  colnames of columns that contain SINGLETS.
+#' @return If data is of class data.frame colnames are modified in place with
+#' the appropriate prefix attatched. If data is of class character, the modified
+#' character vector is returned. Throws a warning if no singlets are detected.
 #' @author Jason Serviss
 #' @examples
 #'
@@ -80,29 +82,60 @@ convertCountsToMatrix <- function(counts) {
 NULL
 #' @export
 
-labelSingletsAndMultiplets <- function(counts, ids) {
-  if(is.null(colnames(counts))) {
-    stop("is.null(colnames(counts)) returned TRUE.")
+labelSingletsAndMultiplets <- function(data, ids) {
+  .inputChecks_labelSingletsAndMultiplets(data, ids)
+  
+  if(class(data) == "data.frame") {
+    
+    .dataframeChecks_labelSingletsAndMultiplets(data)
+    
+    bool <- sapply(ids, function(x) grepl(x, colnames(data)))
+    .boolChecks_labelSingletsAndMultiplets(bool)
+    
+    colnames(data) <- ifelse(
+      rowSums(bool) > 0,
+      paste("s.", colnames(data), sep = ""),
+      paste("m.", colnames(data), sep = "")
+    )
+    
+    return(data)
+    
+  } else {
+    
+    bool <- sapply(ids, function(x) grepl(x, data))
+    .boolChecks_labelSingletsAndMultiplets(bool)
+    
+    data <- ifelse(
+      rowSums(bool) > 0,
+      paste("s.", data, sep = ""),
+      paste("m.", data, sep = "")
+    )
+    return(data)
   }
-  if(!all(sapply(counts, class) %in% c("numeric", "integer"))) {
-    stop("Non-numeric columns detected. Should gene names be moved to rownames?")
-  }
+}
+
+.inputChecks_labelSingletsAndMultiplets <- function(data, ids) {
   if(class(ids) != "character") {
     stop("The id argument must be a character vector.")
   }
-  
-  bool <- sapply(ids, function(x) grepl(x, colnames(counts)))
-  
+  if(!class(data) %in% c("data.frame", "character")) {
+    stop("The data argument must be a character vector or data.frame.")
+  }
+}
+
+.dataframeChecks_labelSingletsAndMultiplets <- function(data) {
+  if(is.null(colnames(data))) {
+    stop("is.null(colnames(data)) returned TRUE.")
+  }
+  if(!all(sapply(data, class) %in% c("numeric", "integer"))) {
+    stop("Non-numeric columns detected. Should gene names be moved to rownames?")
+  }
+}
+
+.boolChecks_labelSingletsAndMultiplets <- function(bool) {
   if(sum(bool) == 0) {
     warning("No singlets were detected. Is your id argument valid?")
   }
-  
-  colnames(counts) <- ifelse(
-    rowSums(bool) > 0,
-    paste("s.", colnames(counts), sep = ""),
-    paste("m.", colnames(counts), sep = "")
-  )
-  return(counts)
 }
 
 #' removeHTSEQsuffix
@@ -113,7 +146,8 @@ labelSingletsAndMultiplets <- function(counts, ids) {
 #'
 #' @name removeHTSEQsuffix
 #' @rdname removeHTSEQsuffix
-#' @param counts data.frame; A data frame with counts data.
+#' @param data data.frame or character; A data frame with sample IDs as colnames
+#'  or a vector of sample IDs.
 #' @return The counts data.frame with the ".htseq" suffix removed from the
 #'  column names.
 #' @author Jason Serviss
@@ -125,18 +159,35 @@ labelSingletsAndMultiplets <- function(counts, ids) {
 NULL
 #' @export
 
-removeHTSEQsuffix <- function(counts) {
-  if(is.null(colnames(counts))) {
-    stop("is.null(colnames(counts)) returned TRUE.")
+removeHTSEQsuffix <- function(data) {
+  .inputChecks_removeHTSEQsuffix(data)
+  if(class(data) == "data.frame") {
+    .dataframeChecks_removeHTSEQsuffix(data)
+    colnames(data) <- gsub("(.*)\\.htseq$", "\\1", colnames(data))
+    return(data)
   }
-  if(all(colnames(counts) == paste0("V", 1:ncol(counts)))) {
+  if(class(data) == "character") {
+    data <- gsub("(.*)\\.htseq$", "\\1", data)
+    return(data)
+  }
+}
+
+.inputChecks_removeHTSEQsuffix <- function(data) {
+  if(!class(data) %in% c("data.frame", "character")) {
+    stop("The data argument must be a character vector or data.frame.")
+  }
+}
+
+.dataframeChecks_removeHTSEQsuffix <- function(data) {
+  if(is.null(colnames(data))) {
+    stop("is.null(colnames(data)) returned TRUE.")
+  }
+  if(all(colnames(data) == paste0("V", 1:ncol(data)))) {
     warning("Your colnames are V1..Vi. Are these sample names?" )
   }
-  if(!any(grepl("\\.htseq", colnames(counts)))) {
-    warning("Could not find the .htseq suffix in colnames(counts)")
+  if(!any(grepl("\\.htseq", colnames(data)))) {
+    warning("Could not find the .htseq suffix in colnames(data)")
   }
-  colnames(counts) <- gsub("(.*)\\.htseq$", "\\1", colnames(counts))
-  return(counts)
 }
 
 #' detectERCCreads

@@ -1,107 +1,4 @@
 
-#' Load meta data.
-#'
-#' Loads a metadata excel file into R.
-#'
-#' @name loadMetaData
-#' @rdname loadMetaData
-#' @param path character; The path to the metadata file. Typically in a
-#'  subfolder of inst/rawData.
-#' @return The metadata as a tibble.
-#' @author Jason Serviss
-#'
-NULL
-#' @export
-#' @importFrom readxl read_excel
-
-loadMetaData <- function(path) {
-  read_excel(path)
-}
-
-#' Annotate plate.
-#'
-#' Uses the standard sample naming nomenclature to add plate row to metadata.
-#' Sample names should follow: (s|m)\\.platename\\.platePosition.
-#' platePosition is in the form row and column without a space where row is a
-#' LETTER (A-H) and column is a number (1-12).
-#'
-#' @name annotatePlate
-#' @rdname annotatePlate
-#' @param data tibble; A tibble containing the sample names using standard
-#'  nomenclature in a column named "sample".
-#' @return The metadata tibble with an additional column indicating plate name.
-#' @author Jason Serviss
-#'
-NULL
-#' @export
-#' @importFrom dplyr mutate
-#' @importFrom stringr str_replace
-
-annotatePlate <- function(data) {
-  mutate(data, plate = str_replace(sample, "^.\\.([A-Z0-9]*)\\....", "\\1"))
-}
-
-#' Annotate row.
-#'
-#' Uses the standard sample naming nomenclature to add plate row to metadata.
-#' Sample names should follow: (s|m)\\.platename\\.platePosition.
-#' platePosition is in the form row and column without a space where row is a
-#' LETTER (A-H) and column is a number (1-12).
-#'
-#' @name annotateRow
-#' @rdname annotateRow
-#' @param data tibble; A tibble containing the sample names using standard
-#'  nomenclature in a column named "sample".
-#' @return The metadata tibble with an additional column indicating row as a
-#' numeric value.
-#' @author Jason Serviss
-#'
-NULL
-#' @export
-#' @importFrom dplyr "%>%" mutate select
-#' @importFrom stringr str_replace
-
-annotateRow <- function(data) {
-  data %>%
-  mutate(rowPos = str_replace(sample, "^.\\.[A-Z0-9]*\\.(.)..", "\\1")) %>%
-  mutate(row = match(rowPos, LETTERS[1:8])) %>%
-  select(-rowPos)
-}
-
-#' Annotate column.
-#'
-#' Uses the standard sample naming nomenclature to add plate row to metadata.
-#' Sample names should follow: (s|m)\\.platename\\.platePosition.
-#' platePosition is in the form row and column without a space where row is a
-#' LETTER (A-H) and column is a number (1-12).
-#'
-#' @name annotateColumn
-#' @rdname annotateColumn
-#' @param data tibble; A tibble containing the sample names using standard
-#'  nomenclature in a column named "sample".
-#' @return The metadata tibble with an additional column indicating column as a
-#' numeric value.
-#' @author Jason Serviss
-#'
-NULL
-#' @export
-#' @importFrom dplyr "%>%" mutate case_when select
-#' @importFrom stringr str_replace
-
-annotateColumn <- function(data) {
-  data %>%
-  mutate(colPos = str_replace(sample, "^.\\.[A-Z0-9]*\\..(..)", "\\1")) %>%
-  mutate(column = case_when(
-   colPos == "01" ~ 1L, colPos == "02" ~ 2L, colPos == "03" ~ 3L,
-   colPos == "04" ~ 4L, colPos == "05" ~ 5L, colPos == "06" ~ 6L,
-   colPos == "07" ~ 7L, colPos == "08" ~ 8L, colPos == "09" ~ 9L,
-   colPos == "10" ~ 10L, colPos == "11" ~ 11L, colPos == "12" ~ 12L,
-   colPos == "13" ~ 13L, colPos == "14" ~ 14L, colPos == "15" ~ 15L,
-   colPos == "16" ~ 16L, colPos == "17" ~ 17L, colPos == "18" ~ 18L
-  )) %>%
-  select(-colPos)
-}
-
 #' Annotate sample GFP status.
 #'
 #' Annotates a logical value indicating a sample's GFP status.
@@ -110,12 +7,12 @@ annotateColumn <- function(data) {
 #' @rdname annotateGFP
 #' @param data tibble; A tibble containing the plate, row, and column
 #'  designation for the samples to be annotated.
-#' @param plate character; A character string indicating the plate variable
-#'  where samples to be annotated are located.
-#' @param row numeric; A numeric vector indicating the rows that are GFP
-#'  positive.
-#' @param column numeric; A numeric vector indicating the columns that are GFP
-#'  positive.
+#' @param plate list; A list where each element is a character vector indicating
+#'  the plate where samples to be annotated are located.
+#' @param row list; A list where each element is a numeric vector indicating the
+#'  rows that are GFP positive in the corresponding plate.
+#' @param column list; A list where each element is a numeric vector indicating
+#'  the columns that are GFP positive in the corresponding plate.
 #' @return The metadata tibble with an additional column indicating GFP staus.
 #' @author Jason Serviss
 #'
@@ -124,16 +21,111 @@ NULL
 #' @importFrom dplyr "%>%" mutate if_else
 
 annotateGFP <- function(data, plate, row, column) {
-  #rename args
-  plateIn <- plate; rowIn <- row; colIn <- column
   
-  #process
-  data %>%
-  mutate(
-    GFP = if_else(
-      plate %in% plateIn & row %in% rowIn & column %in% colIn,
-      TRUE,
-      FALSE
-    )
+  bool <- pmap(list(plate, row, column), function(x, y, z) {
+    data$plate %in% x & data$row %in% y & data$column %in% z
+  }) %>%
+  Reduce("+", .) %>%
+  as.logical()
+  
+  mutate(data, GFP = if_else(bool, TRUE, FALSE))
+}
+
+#' Annotate mouse.
+#'
+#' Annotates the mouse ID for the experiment. For the moment, assumes that each
+#' plate contains only one mouse.
+#'
+#' @name annotateMouse
+#' @rdname annotateMouse
+#' @param data tibble; A tibble containing the plate designation for the samples
+#'  to be annotated.
+#' @param plate character; A character vector indicating the plate where samples
+#'  to be annotated are located.
+#' @param mouseID character; ID of the mouse for the corresponding plate.
+#' @return The metadata tibble with an additional column indicating mouse ID in
+#'  a column named "mouseID".
+#' @author Jason Serviss
+#'
+NULL
+#' @export
+#' @importFrom dplyr "%>%" mutate if_else
+
+annotateMouse <- function(data, plate, mouseID) {
+  plateIN <- plate; mouseID.IN <- mouseID
+  mutate(data, mouseID = mouseID.IN[match(plate, plateIN)])
+}
+
+#' Annotate tissue.
+#'
+#' Annotates the tissue for the experiment. For the moment, assumes that each
+#' plate contains only one tissue.
+#'
+#' @name annotateTissue
+#' @rdname annotateTissue
+#' @param data tibble; A tibble containing the plate designation for the samples
+#'  to be annotated.
+#' @param plate character; A character vector indicating the plate where samples
+#'  to be annotated are located.
+#' @param tissue character; Tissue for the corresponding plate.
+#' @return The metadata tibble with an additional column indicating tissue in
+#'  a column named "tissue".
+#' @author Jason Serviss
+#'
+NULL
+#' @export
+#' @importFrom dplyr "%>%" mutate if_else
+
+annotateTissue <- function(data, plate, tissue) {
+  plateIN <- plate; tissue.IN <- tissue
+  mutate(data, tissue = tissue.IN[match(plate, plateIN)])
+}
+
+#' Rename GFP mouse samples.
+#'
+#' Updates sample names from the old nomenclature (GFPpos.C1.Doublet.5.F9.htseq)
+#' to the new nomenclature (NJA00103.D09.htseq).
+#'
+#' @name renameMgfpSamples
+#' @rdname renameMgfpSamples
+#' @param oldNames character; A character vector of the old names that have
+#'  already been processed by the labelSingletsAndMultiplets and
+#'  removeHTSEQsuffix functions. Names that are already in the new nomenclature
+#'  will not be effected.
+#' @return A character vector of the updated names.
+#' @author Jason Serviss
+#'
+NULL
+#' @export
+
+renameMgfpSamples <- function(oldNames) {
+  bool1 <- str_detect(oldNames, "GFPneg.C1.Singlet.4")
+  bool2 <- str_detect(oldNames, "GFPneg.SI1.Singlet.2")
+  bool3 <- str_detect(oldNames, "GFPpos.C1.Doublet.5")
+  bool4 <- str_detect(oldNames, "GFPpos.C1.Singlet.4")
+  bool5 <- str_detect(oldNames, "GFPpos.SI1.Doublet.3")
+  bool <- bool1 | bool2 | bool3 | bool4 | bool5
+  idx <- which(bool)
+  
+  #extract and fix plate positions
+  pos <- paste0(".", str_extract(oldNames[bool], "[^.]+$"))
+  posidx <- which(nchar(pos) == 3)
+  pos[posidx] <- str_replace(pos[posidx], "(..)(.)", "\\10\\2")
+  
+  #extract prefix
+  prefix <- str_extract(oldNames[bool], "^..")
+  
+  #update plate info
+  plate <- case_when(
+    bool1 ~ "NJA00110",
+    bool2 ~ "NJA00101",
+    bool3 ~ "NJA00111",
+    bool4 ~ "NJA00110",
+    bool5 ~ "NJA00107",
+    TRUE ~ oldNames
   )
+  
+  #synthesize new names
+  plate[bool] <- paste0(prefix, plate[bool], pos)
+  plate
 }
