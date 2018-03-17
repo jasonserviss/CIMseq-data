@@ -2,4 +2,4 @@
 
 # sp.scRNAseqData
 
-Data and HTSeq generated counts data processing functions for the sp.scRNAseq project.
+Metadata, HTSeq generated counts data, and data processing functions for the sp.scRNAseq project.
