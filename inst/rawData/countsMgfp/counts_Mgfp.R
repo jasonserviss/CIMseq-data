@@ -4,12 +4,16 @@
 library(sp.scRNAseqData)
 library(stringr)
 library(dplyr)
+library(googledrive)
+
+#download raw data
+drive_download(file = 'counts_table_180316.txt', path = './inst/rawData/countsMgfp/counts_table_180316.txt', overwrite = TRUE)
+drive_download(file = 'counts_Mgfp_meta.txt', path = './inst/rawData/countsMgfp/counts_Mgfp_meta.txt', TRUE)
 
 #load counts
 #several samples are only NA. find with table(apply(counts, 2, function(x) all(is.na(x))))
 #Regev data identified by "SRR" in colnames
 
-#path <- './inst/rawData/countsMgfp/count_table_180112.txt'
 path <- './inst/rawData/countsMgfp/counts_table_180316.txt'
 counts <- read.table(path, header = TRUE, sep = "\t")
 #bool2 <- !grepl("SRR", colnames(counts)) #Regev data

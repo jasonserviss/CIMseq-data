@@ -5,6 +5,11 @@
 #Should be 131 singlets and 69 multiplets.
 #Note: I never got the raw unfiltered counts.txt file for this from Martin.
 
+library(googledrive)
+
+#download data
+drive_download(file = 'fetalPancreasCounts.txt', path = './inst/rawData/countsSorted2/fetalPancreasCounts.txt', overwrite = TRUE)
+
 #read counts data
 counts <- read.table(
   'inst/rawData/fetalPancreas/fetalPancreasCounts.txt',
