@@ -17,7 +17,10 @@ RUN Rscript -e "install.packages(c('devtools','knitr','rmarkdown','shiny','RCurl
 
 RUN Rscript -e "source('https://cdn.rawgit.com/road2stat/liftrlib/aa132a2d/install_cran.R');install_cran(c('openxlsx/4.0.17', 'googledrive/0.1.1'))"
 
-RUN Rscript -e "source('https://cdn.rawgit.com/road2stat/liftrlib/aa132a2d/install_remotes.R');install_remotes(c('jasonserviss/sp.scRNAseqData'))"
+RUN git clone https://github.com/jasonserviss/sp.scRNAseqData.git /home/sp.scRNAseqData
+
+RUN Rscript -e "devtools::install('/home/sp.scRNAseqData')"
+
+RUN Rscript -e "source('/home/sp.scRNAseqData/inst/rawData/processRaw.R')"
 
 WORKDIR /home
-#CMD #run all 

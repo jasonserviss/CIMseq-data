@@ -7,14 +7,14 @@ library(dplyr)
 library(googledrive)
 
 #download raw data
-drive_download(file = 'counts_table_180316.txt', path = './inst/rawData/countsMgfp/counts_table_180316.txt', overwrite = TRUE)
-drive_download(file = 'counts_Mgfp_meta.txt', path = './inst/rawData/countsMgfp/counts_Mgfp_meta.txt', TRUE)
+drive_download(file = 'countsMgfp_180316.txt', path = './inst/rawData/countsMgfp/countsMgfp_180316.txt', overwrite = TRUE)
+drive_download(file = 'countsMgfpMeta.txt', path = './inst/rawData/countsMgfp/countsMgfpMeta.txt', TRUE)
 
 #load counts
 #several samples are only NA. find with table(apply(counts, 2, function(x) all(is.na(x))))
 #Regev data identified by "SRR" in colnames
 
-path <- './inst/rawData/countsMgfp/counts_table_180316.txt'
+path <- './inst/rawData/countsMgfp/countsMgfp_180316.txt'
 counts <- read.table(path, header = TRUE, sep = "\t")
 #bool2 <- !grepl("SRR", colnames(counts)) #Regev data
 #bool4 <- "HGN" %in% colnames(counts)
@@ -70,7 +70,7 @@ counts <- convertCountsToMatrix(counts)
 countsERCC <- convertCountsToMatrix(countsERCC)
 
 #prepare metadata
-plateData <- loadMetaData('./inst/rawData/countsMgfp/counts_Mgfp_meta.txt') %>%
+plateData <- loadMetaData('./inst/rawData/countsMgfp/countsMgfpMeta.txt') %>%
 mutate(sample = removeHTSEQsuffix(sample)) %>%
 mutate(sample = labelSingletsAndMultiplets(
   sample,
