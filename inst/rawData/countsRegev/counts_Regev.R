@@ -4,6 +4,7 @@
 
 library(sp.scRNAseqData)
 library(googledrive)
+gs_auth(token = "data/googlesheets_token.rds")
 
 #download data
 drive_download(file = 'counts_Regev.txt', path = './inst/rawData/countsRegev/counts_Regev.txt', overwrite = TRUE)

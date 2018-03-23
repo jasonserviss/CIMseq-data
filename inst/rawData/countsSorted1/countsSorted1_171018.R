@@ -2,6 +2,7 @@
 #source('inst/rawData/countsSorted1/counts_171018.R')
 
 library(googledrive)
+gs_auth(token = "data/googlesheets_token.rds")
 
 #download data
 drive_download(file = 'countsSorted1_171018.txt', path = './inst/rawData/countsSorted1/countsSorted1_171018.txt', overwrite = TRUE)

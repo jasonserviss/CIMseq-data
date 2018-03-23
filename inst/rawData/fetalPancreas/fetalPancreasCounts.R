@@ -6,6 +6,7 @@
 #Note: I never got the raw unfiltered counts.txt file for this from Martin.
 
 library(googledrive)
+gs_auth(token = "data/googlesheets_token.rds")
 
 #download data
 drive_download(file = 'fetalPancreasCounts.txt', path = './inst/rawData/countsSorted2/fetalPancreasCounts.txt', overwrite = TRUE)

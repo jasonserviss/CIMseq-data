@@ -5,6 +5,7 @@ library(sp.scRNAseqData)
 library(stringr)
 library(dplyr)
 library(googledrive)
+gs_auth(token = "data/googlesheets_token.rds")
 
 #download raw data
 drive_download(file = 'countsMgfp_180316.txt', path = './inst/rawData/countsMgfp/countsMgfp_180316.txt', overwrite = TRUE)
