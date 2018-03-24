@@ -2,7 +2,7 @@
 #source('inst/rawData/countsSorted1/countsSorted1_171018.R')
 
 cat('Processing countsSorted1.\n')
-googledrive::drive_auth(oauth_token = "data/gd.rds")
+googledrive::drive_auth(oauth_token = "inst/extData/gd.rds")
 
 #download data
 googledrive::drive_download(file = 'countsSorted1_171018.txt', path = './inst/rawData/countsSorted1/countsSorted1_171018.txt', overwrite = TRUE)

@@ -8,7 +8,7 @@ cat('Processing fetalPancreas.\n')
 #Should be 131 singlets and 69 multiplets.
 #Note: I never got the raw unfiltered counts.txt file for this from Martin.
 
-googledrive::drive_auth(oauth_token = "data/gd.rds")
+googledrive::drive_auth(oauth_token = "inst/extData/gd.rds")
 
 #download data
 googledrive::drive_download(

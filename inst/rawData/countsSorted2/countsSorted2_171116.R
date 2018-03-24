@@ -5,7 +5,7 @@ library(sp.scRNAseqData)
 library(dplyr)
 cat('Processing countsSorted2.\n')
 
-googledrive::drive_auth(oauth_token = "data/gd.rds")
+googledrive::drive_auth(oauth_token = "inst/extData/gd.rds")
 
 #download data
 googledrive::drive_download(file = 'countsSorted2_171116.txt', path = './inst/rawData/countsSorted2/countsSorted2_171116.txt', overwrite = TRUE)

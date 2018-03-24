@@ -4,7 +4,7 @@
 
 library(sp.scRNAseqData)
 cat('Processing countsRegev.\n')
-googledrive::drive_auth(oauth_token = "data/gd.rds")
+googledrive::drive_auth(oauth_token = "inst/extData/gd.rds")
 
 #download data
 googledrive::drive_download(
