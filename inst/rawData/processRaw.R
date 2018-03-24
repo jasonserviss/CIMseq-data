@@ -30,7 +30,7 @@ expected <- c(
   "./data/testingCounts.rda" = "4af88bfc027781f40a4b4e6e01f7220f",
   "./data/testingMeta.rda" = "95f895f9a6f7eff0a85c867af816a1c4"
 )
-detected <- tools::md5sum(names(checksums))
+detected <- tools::md5sum(names(expected))
 if(!identical(detected, expected)) {
   problem <- names(expected)[which(expected != detected)]
   message <- paste0("Checksums did not match for file(s) ", problem)
