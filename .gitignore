@@ -3,5 +3,5 @@
 .DS_Store
 inst/doc
 .Rapp.history
-.rda
+*.rda
 .txt
