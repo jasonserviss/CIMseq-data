@@ -24,6 +24,4 @@ RUN Rscript -e "devtools::install('/home/sp.scRNAseqData')"
 
 # Run data scripts
 WORKDIR /home/sp.scRNAseqData
-RUN Rscript -e "source('./inst/rawData/processRaw.R')"
-
 
