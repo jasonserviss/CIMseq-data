@@ -1,6 +1,7 @@
 #run from package root
 #source('inst/rawData/countsSorted1/countsSorted1_171018.R')
 
+cat('Processing countsSorted1')
 googledrive::drive_auth(oauth_token = "data/gd.rds")
 
 #download data

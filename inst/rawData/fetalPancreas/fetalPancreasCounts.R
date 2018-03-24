@@ -2,6 +2,7 @@
 #source('inst/rawData/fetalPancreas/fetalPancreasCounts.R')
 
 library(sp.scRNAseqData)
+cat('Processing fetalPancreas.')
 
 #fetalPancreasCounts
 #Should be 131 singlets and 69 multiplets.

@@ -24,6 +24,7 @@ RUN git clone https://github.com/jasonserviss/sp.scRNAseqData.git /home/sp.scRNA
 RUN Rscript -e "devtools::install('/home/sp.scRNAseqData')"
 
 # Run data scripts
-RUN Rscript -e "source('/home/sp.scRNAseqData/inst/rawData/processRaw.R')"
+WORKDIR /home/sp.scRNAseqData
+RUN Rscript -e "source('./inst/rawData/processRaw.R')"
 
-WORKDIR /home
+
