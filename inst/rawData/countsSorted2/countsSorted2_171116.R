@@ -3,7 +3,7 @@
 
 library(sp.scRNAseqData)
 library(dplyr)
-cat('Processing countsSorted2')
+cat('Processing countsSorted2.\n')
 
 googledrive::drive_auth(oauth_token = "data/gd.rds")
 

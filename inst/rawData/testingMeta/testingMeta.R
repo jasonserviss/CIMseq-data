@@ -1,7 +1,7 @@
 #test data for metadata functions
 #run with: source('./inst/rawData/testingMeta/testingMeta.R')
 
-cat('Processing testingMeta.')
+cat('Processing testingMeta.\n')
 
 testingMeta <- tibble::tibble(
   sample = c(

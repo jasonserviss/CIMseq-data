@@ -3,7 +3,7 @@
 #GSE92332
 
 library(sp.scRNAseqData)
-cat('Processing countsRegev')
+cat('Processing countsRegev.\n')
 googledrive::drive_auth(oauth_token = "data/gd.rds")
 
 #download data

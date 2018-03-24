@@ -3,7 +3,7 @@
 
 library(sp.scRNAseqData)
 library(dplyr)
-cat('Processing countsMgfp')
+cat('Processing countsMgfp.\n')
 googledrive::drive_auth(oauth_token = "data/gd.rds")
 
 #download raw data

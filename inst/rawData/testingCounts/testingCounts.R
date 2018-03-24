@@ -3,7 +3,7 @@
 #generates a data.frame of counts that resemble a small subset of real counts
 #data to be used for testing.
 
-cat('Processing testingCounts.')
+cat('Processing testingCounts.\n')
 
 #generate "normal" counts
 nCellTypes <- 2

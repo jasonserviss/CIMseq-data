@@ -20,7 +20,6 @@ RUN Rscript -e "source('https://cdn.rawgit.com/road2stat/liftrlib/aa132a2d/insta
 
 # Clone and install sp.scRNAseqData
 RUN git clone https://github.com/jasonserviss/sp.scRNAseqData.git /home/sp.scRNAseqData
-
 RUN Rscript -e "devtools::install('/home/sp.scRNAseqData')"
 
 # Run data scripts
