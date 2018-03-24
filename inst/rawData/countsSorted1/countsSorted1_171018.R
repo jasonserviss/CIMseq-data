@@ -1,7 +1,7 @@
 #run from package root
-#source('inst/rawData/countsSorted1/counts_171018.R')
+#source('inst/rawData/countsSorted1/countsSorted1_171018.R')
 
-googledrive::drive_auth(token = "data/gd.rds")
+googledrive::drive_auth(oauth_token = "data/gd.rds")
 
 #download data
 googledrive::drive_download(file = 'countsSorted1_171018.txt', path = './inst/rawData/countsSorted1/countsSorted1_171018.txt', overwrite = TRUE)

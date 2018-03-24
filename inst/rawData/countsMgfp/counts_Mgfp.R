@@ -3,11 +3,19 @@
 
 library(sp.scRNAseqData)
 
-googledrive::drive_auth(token = "data/gd.rds")
+googledrive::drive_auth(oauth_token = "data/gd.rds")
 
 #download raw data
-googledrive::drive_download(file = 'countsMgfp_180316.txt', path = './inst/rawData/countsMgfp/countsMgfp_180316.txt', overwrite = TRUE)
-googledrive::drive_download(file = 'countsMgfpMeta.txt', path = './inst/rawData/countsMgfp/countsMgfpMeta.txt', TRUE)
+googledrive::drive_download(
+  file = 'countsMgfp_180316.txt',
+  path = './inst/rawData/countsMgfp/countsMgfp_180316.txt',
+  overwrite = TRUE
+)
+googledrive::drive_download(
+  file = 'countsMgfpMeta.txt',
+  path = './inst/rawData/countsMgfp/countsMgfpMeta.txt',
+  overwrite = TRUE
+)
 
 #load counts
 #several samples are only NA. find with table(apply(counts, 2, function(x) all(is.na(x))))
@@ -90,7 +98,7 @@ annotateGFP(
   row = list(1:8, 1:8, 1:8, 1:8, 1:8, 1:8),
   column = list(1:12, 1:12, 1:6, 1:6, 1:12, 7:12)
 ) %>%
-dplyr::mutate(GFP = if_else(
+dplyr::mutate(GFP = dplyr::if_else(
   plate %in% c("NJA00204", "NJA00205", "NJA00206"),
   NA, GFP)
 ) %>%
@@ -113,7 +121,7 @@ annotateTissue(
     "colon", "colon", "colon", "colon", "colon", "colon"
   )
 ) %>%
-dplyr::mutate(cellNumber = if_else(
+dplyr::mutate(cellNumber = dplyr::if_else(
   stringr::str_detect(sample, "^s"),
   "Singlet", "Multiplet")
 ) %>%

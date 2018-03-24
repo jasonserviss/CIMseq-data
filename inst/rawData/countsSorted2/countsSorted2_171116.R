@@ -1,10 +1,10 @@
 #run from package root
-#source('./inst/rawData/countsSorted2/counts_171116.R')
+#source('./inst/rawData/countsSorted2/countsSorted2_171116.R')
 
 library(sp.scRNAseqData)
 library(dplyr)
 
-googledrive::drive_auth(token = "data/gd.rds")
+googledrive::drive_auth(oauth_token = "data/gd.rds")
 
 #download data
 googledrive::drive_download(file = 'countsSorted2_171116.txt', path = './inst/rawData/countsSorted2/countsSorted2_171116.txt', overwrite = TRUE)

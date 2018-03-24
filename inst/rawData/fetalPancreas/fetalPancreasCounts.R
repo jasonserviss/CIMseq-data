@@ -1,14 +1,20 @@
 #run from package root
 #source('inst/rawData/fetalPancreas/fetalPancreasCounts.R')
 
+library(sp.scRNAseqData)
+
 #fetalPancreasCounts
 #Should be 131 singlets and 69 multiplets.
 #Note: I never got the raw unfiltered counts.txt file for this from Martin.
 
-googledrive::drive_auth(token = "data/gd.rds")
+googledrive::drive_auth(oauth_token = "data/gd.rds")
 
 #download data
-googledrive::drive_download(file = 'fetalPancreasCounts.txt', path = './inst/rawData/countsSorted2/fetalPancreasCounts.txt', overwrite = TRUE)
+googledrive::drive_download(
+  file = 'fetalPancreasCounts.txt',
+  path = './inst/rawData/fetalPancreas/fetalPancreasCounts.txt',
+  overwrite = TRUE
+)
 
 #read counts data
 counts <- read.table(

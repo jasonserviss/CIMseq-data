@@ -1,3 +1,4 @@
+#source('./inst/rawData/processRaw.R')
 
 ignore <- c(
   './inst/rawData//permutations_171116/permutations.R',

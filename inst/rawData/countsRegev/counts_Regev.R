@@ -1,12 +1,16 @@
 #run from package root
-#source('./inst/rawData/countsRegev/count_table_Regev.R')
+#source('./inst/rawData/countsRegev/counts_Regev.R')
 #GSE92332
 
 library(sp.scRNAseqData)
-googledrive::drive_auth(token = "data/gd.rds")
+googledrive::drive_auth(oauth_token = "data/gd.rds")
 
 #download data
-drive_download(file = 'counts_Regev.txt', path = './inst/rawData/countsRegev/counts_Regev.txt', overwrite = TRUE)
+drive_download(
+  file = 'counts_Regev.txt',
+  path = './inst/rawData/countsRegev/counts_Regev.txt',
+  overwrite = TRUE
+)
 
 #load counts
 #Subset Regev data using SRR in colnames
