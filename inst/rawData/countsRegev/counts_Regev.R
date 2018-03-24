@@ -3,8 +3,7 @@
 #GSE92332
 
 library(sp.scRNAseqData)
-library(googledrive)
-gs_auth(token = "data/googlesheets_token.rds")
+googledrive::drive_auth(token = "data/gd.rds")
 
 #download data
 drive_download(file = 'counts_Regev.txt', path = './inst/rawData/countsRegev/counts_Regev.txt', overwrite = TRUE)

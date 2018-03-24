@@ -2,14 +2,12 @@
 #source('inst/rawData/countsMgfp/counts_Mgfp.R')
 
 library(sp.scRNAseqData)
-library(stringr)
-library(dplyr)
-library(googledrive)
-gs_auth(token = "data/googlesheets_token.rds")
+
+googledrive::drive_auth(token = "data/gd.rds")
 
 #download raw data
-drive_download(file = 'countsMgfp_180316.txt', path = './inst/rawData/countsMgfp/countsMgfp_180316.txt', overwrite = TRUE)
-drive_download(file = 'countsMgfpMeta.txt', path = './inst/rawData/countsMgfp/countsMgfpMeta.txt', TRUE)
+googledrive::drive_download(file = 'countsMgfp_180316.txt', path = './inst/rawData/countsMgfp/countsMgfp_180316.txt', overwrite = TRUE)
+googledrive::drive_download(file = 'countsMgfpMeta.txt', path = './inst/rawData/countsMgfp/countsMgfpMeta.txt', TRUE)
 
 #load counts
 #several samples are only NA. find with table(apply(counts, 2, function(x) all(is.na(x))))
@@ -72,14 +70,14 @@ countsERCC <- convertCountsToMatrix(countsERCC)
 
 #prepare metadata
 plateData <- loadMetaData('./inst/rawData/countsMgfp/countsMgfpMeta.txt') %>%
-mutate(sample = removeHTSEQsuffix(sample)) %>%
-mutate(sample = labelSingletsAndMultiplets(
+dplyr::mutate(sample = removeHTSEQsuffix(sample)) %>%
+dplyr::mutate(sample = labelSingletsAndMultiplets(
   sample,
   c(
     "Singlet", "NJA00102", "NJA00103", "NJA00104",
     "NJA00109", "NJA00204", "NJA00205", "NJA00206"
 ))) %>%
-mutate(sample = renameMgfpSamples(sample)) %>%
+dplyr::mutate(sample = renameMgfpSamples(sample)) %>%
 annotatePlate(.) %>%
 annotateRow(.) %>%
 annotateColumn(.) %>%
@@ -92,7 +90,7 @@ annotateGFP(
   row = list(1:8, 1:8, 1:8, 1:8, 1:8, 1:8),
   column = list(1:12, 1:12, 1:6, 1:6, 1:12, 7:12)
 ) %>%
-mutate(GFP = if_else(
+dplyr::mutate(GFP = if_else(
   plate %in% c("NJA00204", "NJA00205", "NJA00206"),
   NA, GFP)
 ) %>%
@@ -115,11 +113,11 @@ annotateTissue(
     "colon", "colon", "colon", "colon", "colon", "colon"
   )
 ) %>%
-mutate(cellNumber = if_else(
-  str_detect(sample, "^s"),
+dplyr::mutate(cellNumber = if_else(
+  stringr::str_detect(sample, "^s"),
   "Singlet", "Multiplet")
 ) %>%
-mutate(filtered = if_else(sample %in% colnames(counts), FALSE, TRUE))
+dplyr::mutate(filtered = dplyr::if_else(sample %in% colnames(counts), FALSE, TRUE))
 
 #rename and save
 countsMgfp <- counts

@@ -1,7 +1,8 @@
 
 ignore <- c(
-  "./inst/rawData//permutations_171116/permutations.R",
-  "./inst/rawData//syntheticData/syntheticData.R"
+  './inst/rawData//permutations_171116/permutations.R',
+  './inst/rawData//syntheticData/syntheticData.R',
+  './inst/rawData//processRaw.R'
 )
 
 toProcess <- list.files(

@@ -5,11 +5,10 @@
 #Should be 131 singlets and 69 multiplets.
 #Note: I never got the raw unfiltered counts.txt file for this from Martin.
 
-library(googledrive)
-gs_auth(token = "data/googlesheets_token.rds")
+googledrive::drive_auth(token = "data/gd.rds")
 
 #download data
-drive_download(file = 'fetalPancreasCounts.txt', path = './inst/rawData/countsSorted2/fetalPancreasCounts.txt', overwrite = TRUE)
+googledrive::drive_download(file = 'fetalPancreasCounts.txt', path = './inst/rawData/countsSorted2/fetalPancreasCounts.txt', overwrite = TRUE)
 
 #read counts data
 counts <- read.table(

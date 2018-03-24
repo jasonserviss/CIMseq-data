@@ -3,14 +3,13 @@
 
 library(sp.scRNAseqData)
 library(dplyr)
-library(readr)
-library(googledrive)
-gs_auth(token = "data/googlesheets_token.rds")
+
+googledrive::drive_auth(token = "data/gd.rds")
 
 #download data
-drive_download(file = 'countsSorted2_171116.txt', path = './inst/rawData/countsSorted2/countsSorted2_171116.txt', overwrite = TRUE)
+googledrive::drive_download(file = 'countsSorted2_171116.txt', path = './inst/rawData/countsSorted2/countsSorted2_171116.txt', overwrite = TRUE)
 
-drive_download(file = 'countsSortedMeta2_171116.txt', path = './inst/rawData/countsSorted2/countsSortedMeta2_171116.txt', overwrite = TRUE)
+googledrive::drive_download(file = 'countsSortedMeta2_171116.txt', path = './inst/rawData/countsSorted2/countsSortedMeta2_171116.txt', overwrite = TRUE)
 
 #load counts
 path <- './inst/rawData/countsSorted2/countsSorted2_171116.txt'
@@ -59,8 +58,8 @@ countsERCC <- convertCountsToMatrix(countsERCC)
 
 #setup metadata
 plateData <- loadMetaData('./inst/rawData/countsSorted2/countsSortedMeta2_171116.txt') %>%
-mutate(sample = removeHTSEQsuffix(sample)) %>%
-mutate(sample = labelSingletsAndMultiplets(sample, "NJB00201")) %>%
+dplyr::mutate(sample = removeHTSEQsuffix(sample)) %>%
+dplyr::mutate(sample = labelSingletsAndMultiplets(sample, "NJB00201")) %>%
 annotatePlate(.) %>%
 annotateRow(.) %>%
 annotateColumn(.) %>%

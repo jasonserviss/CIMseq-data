@@ -1,11 +1,10 @@
 #run from package root
 #source('inst/rawData/countsSorted1/counts_171018.R')
 
-library(googledrive)
-gs_auth(token = "data/googlesheets_token.rds")
+googledrive::drive_auth(token = "data/gd.rds")
 
 #download data
-drive_download(file = 'countsSorted1_171018.txt', path = './inst/rawData/countsSorted1/countsSorted1_171018.txt', overwrite = TRUE)
+googledrive::drive_download(file = 'countsSorted1_171018.txt', path = './inst/rawData/countsSorted1/countsSorted1_171018.txt', overwrite = TRUE)
 
 #NJB00101 is the singlets plate, NJB00103 is doublets (according to your scheme).
 
@@ -54,8 +53,8 @@ countsERCC <- convertCountsToMatrix(countsERCC)
 countsSorted1 <- countsMe
 countsSortedERCC1 <- countsERCC
 save(
-    countsSorted1,
-    countsSortedERCC1,
-    file = "./data/countsSorted1.rda",
-    compress = "bzip2"
+  countsSorted1,
+  countsSortedERCC1,
+  file = "./data/countsSorted1.rda",
+  compress = "bzip2"
 )
