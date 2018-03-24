@@ -7,7 +7,7 @@ cat('Processing countsRegev')
 googledrive::drive_auth(oauth_token = "data/gd.rds")
 
 #download data
-drive_download(
+googledrive::drive_download(
   file = 'counts_Regev.txt',
   path = './inst/rawData/countsRegev/counts_Regev.txt',
   overwrite = TRUE
