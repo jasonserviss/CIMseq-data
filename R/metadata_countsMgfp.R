@@ -54,7 +54,7 @@ NULL
 
 annotateMouse <- function(data, plate, mouseID) {
   plateIN <- plate; mouseID.IN <- mouseID
-  mutate(data, mouseID = mouseID.IN[match(plate, plateIN)])
+  mutate(data, mouseID = as.integer(mouseID.IN[match(plate, plateIN)]))
 }
 
 #' Annotate tissue.
