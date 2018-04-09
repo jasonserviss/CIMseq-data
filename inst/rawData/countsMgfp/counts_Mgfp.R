@@ -13,8 +13,18 @@ googledrive::drive_download(
   overwrite = TRUE
 )
 googledrive::drive_download(
-  file = 'countsMgfpMeta.txt',
-  path = './inst/rawData/countsMgfp/countsMgfpMeta.txt',
+  file = 'countsMgfpMeta_180316.txt',
+  path = './inst/rawData/countsMgfp/countsMgfpMeta_180316.txt',
+  overwrite = TRUE
+)
+googledrive::drive_download(
+  file = 'countsMgfp_180409.txt',
+  path = './inst/rawData/countsMgfp/countsMgfp_180409.txt',
+  overwrite = TRUE
+)
+googledrive::drive_download(
+  file = 'countsMgfpMeta_180409.txt',
+  path = './inst/rawData/countsMgfp/countsMgfpMeta_180409.txt',
   overwrite = TRUE
 )
 
@@ -22,14 +32,11 @@ googledrive::drive_download(
 #several samples are only NA. find with table(apply(counts, 2, function(x) all(is.na(x))))
 #Regev data identified by "SRR" in colnames
 
-path <- './inst/rawData/countsMgfp/countsMgfp_180316.txt'
-counts <- read.table(path, header = TRUE, sep = "\t")
-#bool2 <- !grepl("SRR", colnames(counts)) #Regev data
-#bool4 <- "HGN" %in% colnames(counts)
-#counts <- counts[, bool2 & bool4]
-#bool1 <- !grepl("SI1.Singlet.1", colnames(counts)) #old miSeq data (should be removed now)
-#bool3 <- !apply(counts, 2, function(x) all(is.na(x))) #samples without counts (should be resolved now)
-#counts <- counts[, bool1 & bool3]
+path1 <- './inst/rawData/countsMgfp/countsMgfp_180316.txt'
+path2 <- './inst/rawData/countsMgfp/countsMgfp_180409.txt'
+counts1 <- read.table(path1, header = TRUE, sep = "\t")
+counts2 <- read.table(path2, header = TRUE, sep = "\t")
+counts <- bind_cols(counts1, counts2)
 
 #check for NAs
 if(sum(is.na(counts)) > 0) {
@@ -45,7 +52,8 @@ counts <- moveGenesToRownames(counts)
 #label singlets and multiplets
 ids <- c(
   "Singlet", "NJA00102", "NJA00103", "NJA00104",
-  "NJA00109", "NJA00204", "NJA00205", "NJA00206"
+  "NJA00109", "NJA00204", "NJA00205", "NJA00206",
+  "NJA00402", "NJA00403", "NJA00411", "NJA00412"
 )
 counts <- labelSingletsAndMultiplets(counts, ids)
 
@@ -78,14 +86,12 @@ counts <- convertCountsToMatrix(counts)
 countsERCC <- convertCountsToMatrix(countsERCC)
 
 #prepare metadata
-plateData <- loadMetaData('./inst/rawData/countsMgfp/countsMgfpMeta.txt') %>%
+plateData1 <- loadMetaData('./inst/rawData/countsMgfp/countsMgfpMeta_180316.txt')
+plateData2 <- loadMetaData('./inst/rawData/countsMgfp/countsMgfpMeta_180409.txt')
+
+plateData <- bind_rows(plateData1, plateData2) %>%
 dplyr::mutate(sample = removeHTSEQsuffix(sample)) %>%
-dplyr::mutate(sample = labelSingletsAndMultiplets(
-  sample,
-  c(
-    "Singlet", "NJA00102", "NJA00103", "NJA00104",
-    "NJA00109", "NJA00204", "NJA00205", "NJA00206"
-))) %>%
+dplyr::mutate(sample = labelSingletsAndMultiplets(sample, ids))%>%
 dplyr::mutate(sample = renameMgfpSamples(sample)) %>%
 annotatePlate(.) %>%
 annotateRow(.) %>%
@@ -100,26 +106,32 @@ annotateGFP(
   column = list(1:12, 1:12, 1:6, 1:6, 1:12, 7:12)
 ) %>%
 dplyr::mutate(GFP = dplyr::if_else(
-  plate %in% c("NJA00204", "NJA00205", "NJA00206"),
+  plate %in% c(
+    "NJA00204", "NJA00205", "NJA00206", "NJA00402", "NJA00403", "NJA00411",
+    "NJA00412"
+  ),
   NA, GFP)
 ) %>%
 annotateMouse(
   .,
   plate = c(
     "NJA00110", "NJA00101", "NJA00111", "NJA00107", "NJA00102", "NJA00103",
-    "NJA00104", "NJA00109", "NJA00201", "NJA00204", "NJA00205", "NJA00206"
+    "NJA00104", "NJA00109", "NJA00201", "NJA00204", "NJA00205", "NJA00206",
+    "NJA00402", "NJA00403", "NJA00411", "NJA00412"
   ),
-  mouse = c(1, 1, 1, 1, 1, 1, 1, 1, 2, 2, 2, 2)
+  mouse = c(1, 1, 1, 1, 1, 1, 1, 1, 2, 2, 2, 2, 4, 4, 4, 4)
 ) %>%
 annotateTissue(
   .,
   plate = c(
     "NJA00101", "NJA00102", "NJA00103", "NJA00104", "NJA00107", "NJA00109",
-    "NJA00110", "NJA00111", "NJA00201", "NJA00204", "NJA00205", "NJA00206"
+    "NJA00110", "NJA00111", "NJA00201", "NJA00204", "NJA00205", "NJA00206",
+    "NJA00402", "NJA00403", "NJA00411", "NJA00412"
   ),
   tissue = c(
     "SI", "SI", "SI", "SI", "SI", "colon",
-    "colon", "colon", "colon", "colon", "colon", "colon"
+    "colon", "colon", "colon", "colon", "colon", "colon",
+    "SI", "SI", "colon", "colon"
   )
 ) %>%
 dplyr::mutate(cellNumber = dplyr::if_else(
