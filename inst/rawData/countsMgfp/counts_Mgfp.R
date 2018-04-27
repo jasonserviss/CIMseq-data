@@ -1,8 +1,10 @@
 #run from package root
 #source('inst/rawData/countsMgfp/counts_Mgfp.R')
 
-library(sp.scRNAseqData)
-library(dplyr)
+packages <- c("sp.scRNAseqData", "tidyverse")
+purrr::walk(packages, library, character.only = TRUE)
+rm(packages)
+
 cat('Processing countsMgfp.\n')
 googledrive::drive_auth(oauth_token = "inst/extData/gd.rds")
 
