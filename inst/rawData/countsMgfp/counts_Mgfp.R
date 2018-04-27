@@ -7,36 +7,36 @@ cat('Processing countsMgfp.\n')
 googledrive::drive_auth(oauth_token = "inst/extData/gd.rds")
 
 #download raw data
-googledrive::drive_download(
-  file = 'countsMgfp_180316.txt',
-  path = './inst/rawData/countsMgfp/countsMgfp_180316.txt',
-  overwrite = TRUE
+files <- c(
+  'countsMgfp_180316.txt',
+  'countsMgfpMeta_180316.txt',
+  'countsMgfp_180409.txt',
+  'countsMgfpMeta_180409.txt',
+  'countsMgfp_180427.txt',
+  'countsMgfpMeta_180427.txt'
 )
-googledrive::drive_download(
-  file = 'countsMgfpMeta_180316.txt',
-  path = './inst/rawData/countsMgfp/countsMgfpMeta_180316.txt',
-  overwrite = TRUE
+
+paths <- c(
+  './inst/rawData/countsMgfp/countsMgfp_180316.txt',
+  './inst/rawData/countsMgfp/countsMgfpMeta_180316.txt',
+  './inst/rawData/countsMgfp/countsMgfp_180409.txt',
+  './inst/rawData/countsMgfp/countsMgfpMeta_180409.txt',
+  './inst/rawData/countsMgfp/countsMgfp_180427.txt',
+  './inst/rawData/countsMgfp/countsMgfpMeta_180427.txt'
 )
-googledrive::drive_download(
-  file = 'countsMgfp_180409.txt',
-  path = './inst/rawData/countsMgfp/countsMgfp_180409.txt',
-  overwrite = TRUE
-)
-googledrive::drive_download(
-  file = 'countsMgfpMeta_180409.txt',
-  path = './inst/rawData/countsMgfp/countsMgfpMeta_180409.txt',
-  overwrite = TRUE
-)
+
+trash <- map2(files, paths, function(file, path) {
+  googledrive::drive_download(file, path, overwrite = TRUE)
+})
+rm(trash)
 
 #load counts
 #several samples are only NA. find with table(apply(counts, 2, function(x) all(is.na(x))))
 #Regev data identified by "SRR" in colnames
 
-path1 <- './inst/rawData/countsMgfp/countsMgfp_180316.txt'
-path2 <- './inst/rawData/countsMgfp/countsMgfp_180409.txt'
-counts1 <- read.table(path1, header = TRUE, sep = "\t")
-counts2 <- read.table(path2, header = TRUE, sep = "\t")
-counts <- bind_cols(counts1, counts2)
+dataFiles <- paths[!grepl("Meta", paths)]
+loaded <- map(dataFiles, read.table, header = TRUE, sep = "\t")
+counts <- reduce(loaded, full_join, by = "HGN")
 
 #check for NAs
 if(sum(is.na(counts)) > 0) {
@@ -53,7 +53,8 @@ counts <- moveGenesToRownames(counts)
 ids <- c(
   "Singlet", "NJA00102", "NJA00103", "NJA00104",
   "NJA00109", "NJA00204", "NJA00205", "NJA00206",
-  "NJA00402", "NJA00403", "NJA00411", "NJA00412"
+  "NJA00402", "NJA00403", "NJA00411", "NJA00412",
+  "NJA00404", "NJA00405", "NJA00408", "NJA00409"
 )
 counts <- labelSingletsAndMultiplets(counts, ids)
 
@@ -69,7 +70,7 @@ counts <- counts[!ercc, ]
 counts <- counts[!detectNonGenes(counts), ]
 
 #remove low quality genes
-counts <- counts[detectLowQualityGenes(counts), ]
+counts <- counts[detectLowQualityGenes(counts, mincount = 0), ]
 
 #remove low quality cells
 lqc <- detectLowQualityCells(
@@ -86,59 +87,62 @@ counts <- convertCountsToMatrix(counts)
 countsERCC <- convertCountsToMatrix(countsERCC)
 
 #prepare metadata
-plateData1 <- loadMetaData('./inst/rawData/countsMgfp/countsMgfpMeta_180316.txt')
-plateData2 <- loadMetaData('./inst/rawData/countsMgfp/countsMgfpMeta_180409.txt')
-
-plateData <- bind_rows(plateData1, plateData2) %>%
-dplyr::mutate(sample = removeHTSEQsuffix(sample)) %>%
-dplyr::mutate(sample = labelSingletsAndMultiplets(sample, ids))%>%
-dplyr::mutate(sample = renameMgfpSamples(sample)) %>%
-annotatePlate(.) %>%
-annotateRow(.) %>%
-annotateColumn(.) %>%
-annotateGFP(
-  .,
-  plate = list(
-    c("NJA00111"), c("NJA00110"), c("NJA00103"),
-    c("NJA00104"), c("NJA00201"), c("NJA00110")
-  ),
-  row = list(1:8, 1:8, 1:8, 1:8, 1:8, 1:8),
-  column = list(1:12, 1:12, 1:6, 1:6, 1:12, 7:12)
-) %>%
-dplyr::mutate(GFP = dplyr::if_else(
-  plate %in% c(
-    "NJA00204", "NJA00205", "NJA00206", "NJA00402", "NJA00403", "NJA00411",
-    "NJA00412"
-  ),
-  NA, GFP)
-) %>%
-annotateMouse(
-  .,
-  plate = c(
-    "NJA00110", "NJA00101", "NJA00111", "NJA00107", "NJA00102", "NJA00103",
-    "NJA00104", "NJA00109", "NJA00201", "NJA00204", "NJA00205", "NJA00206",
-    "NJA00402", "NJA00403", "NJA00411", "NJA00412"
-  ),
-  mouse = c(1, 1, 1, 1, 1, 1, 1, 1, 2, 2, 2, 2, 4, 4, 4, 4)
-) %>%
-annotateTissue(
-  .,
-  plate = c(
-    "NJA00101", "NJA00102", "NJA00103", "NJA00104", "NJA00107", "NJA00109",
-    "NJA00110", "NJA00111", "NJA00201", "NJA00204", "NJA00205", "NJA00206",
-    "NJA00402", "NJA00403", "NJA00411", "NJA00412"
-  ),
-  tissue = c(
-    "SI", "SI", "SI", "SI", "SI", "colon",
-    "colon", "colon", "colon", "colon", "colon", "colon",
-    "SI", "SI", "colon", "colon"
-  )
-) %>%
-dplyr::mutate(cellNumber = dplyr::if_else(
-  stringr::str_detect(sample, "^s"),
-  "Singlet", "Multiplet")
-) %>%
-dplyr::mutate(filtered = dplyr::if_else(sample %in% colnames(counts), FALSE, TRUE))
+plateData <- paths[grepl("Meta", paths)] %>%
+  map(read_tsv) %>%
+  bind_rows() %>%
+  dplyr::mutate(sample = removeHTSEQsuffix(sample)) %>%
+  dplyr::mutate(sample = labelSingletsAndMultiplets(sample, ids))%>%
+  dplyr::mutate(sample = renameMgfpSamples(sample)) %>%
+  annotatePlate(.) %>%
+  annotateRow(.) %>%
+  annotateColumn(.) %>%
+  annotateGFP(
+    .,
+    plate = list(
+      c("NJA00111"), c("NJA00110"), c("NJA00103"),
+      c("NJA00104"), c("NJA00201"), c("NJA00110")
+    ),
+    row = list(1:8, 1:8, 1:8, 1:8, 1:8, 1:8),
+    column = list(1:12, 1:12, 1:6, 1:6, 1:12, 7:12)
+  ) %>%
+  dplyr::mutate(GFP = dplyr::if_else(
+    plate %in% c(
+      "NJA00204", "NJA00205", "NJA00206", "NJA00402", "NJA00403", "NJA00411",
+      "NJA00412", "NJA00404", "NJA00405", "NJA00406", "NJA00408", "NJA00409",
+      "NJA00413"
+    ),
+    NA, GFP)
+  ) %>%
+  annotateMouse(
+    .,
+    plate = c(
+      "NJA00110", "NJA00101", "NJA00111", "NJA00107", "NJA00102", "NJA00103",
+      "NJA00104", "NJA00109", "NJA00201", "NJA00204", "NJA00205", "NJA00206",
+      "NJA00402", "NJA00403", "NJA00411", "NJA00412", "NJA00404", "NJA00405",
+      "NJA00406", "NJA00408", "NJA00409", "NJA00413"
+    ),
+    mouse = c(1, 1, 1, 1, 1, 1, 1, 1, 2, 2, 2, 2, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4)
+  ) %>%
+  annotateTissue(
+    .,
+    plate = c(
+      "NJA00101", "NJA00102", "NJA00103", "NJA00104", "NJA00107", "NJA00109",
+      "NJA00110", "NJA00111", "NJA00201", "NJA00204", "NJA00205", "NJA00206",
+      "NJA00402", "NJA00403", "NJA00411", "NJA00412", "NJA00404", "NJA00405",
+      "NJA00406", "NJA00408", "NJA00409", "NJA00413"
+    ),
+    tissue = c(
+      "SI", "SI", "SI", "SI", "SI", "colon",
+      "colon", "colon", "colon", "colon", "colon", "colon",
+      "SI", "SI", "colon", "colon", "SI", "SI", "SI",
+      "colon", "colon", "colon"
+    )
+  ) %>%
+  dplyr::mutate(cellNumber = dplyr::if_else(
+    stringr::str_detect(sample, "^s"),
+    "Singlet", "Multiplet")
+  ) %>%
+  dplyr::mutate(filtered = dplyr::if_else(sample %in% colnames(counts), FALSE, TRUE))
 
 #rename and save
 countsMgfp <- counts
