@@ -15,17 +15,12 @@ files <- c(
   'countsMgfp_180409.txt',
   'countsMgfpMeta_180409.txt',
   'countsMgfp_180427.txt',
-  'countsMgfpMeta_180427.txt'
+  'countsMgfpMeta_180427.txt',
+  'countsMgfp_180604.txt',
+  'countsMgfpMeta_180604.txt'
 )
 
-paths <- c(
-  './inst/rawData/countsMgfp/countsMgfp_180316.txt',
-  './inst/rawData/countsMgfp/countsMgfpMeta_180316.txt',
-  './inst/rawData/countsMgfp/countsMgfp_180409.txt',
-  './inst/rawData/countsMgfp/countsMgfpMeta_180409.txt',
-  './inst/rawData/countsMgfp/countsMgfp_180427.txt',
-  './inst/rawData/countsMgfp/countsMgfpMeta_180427.txt'
-)
+paths <- paths <- file.path('./inst/rawData/countsMgfp', files)
 
 trash <- map2(files, paths, function(file, path) {
   googledrive::drive_download(file, path, overwrite = TRUE)
@@ -52,11 +47,13 @@ counts <- moveGenesToRownames(counts)
 #counts <- removeHTSEQsuffix(counts)
 
 #label singlets and multiplets
+#ids should include SINGLET plates only
 ids <- c(
   "Singlet", "NJA00102", "NJA00103", "NJA00104",
   "NJA00109", "NJA00204", "NJA00205", "NJA00206",
   "NJA00402", "NJA00403", "NJA00411", "NJA00412",
-  "NJA00404", "NJA00405", "NJA00408", "NJA00409"
+  "NJA00404", "NJA00405", "NJA00408", "NJA00409",
+  "NJA00602", "NJA00608", "NJA00609", "NJA00801"
 )
 counts <- labelSingletsAndMultiplets(counts, ids)
 
@@ -111,7 +108,7 @@ plateData <- paths[grepl("Meta", paths)] %>%
     plate %in% c(
       "NJA00204", "NJA00205", "NJA00206", "NJA00402", "NJA00403", "NJA00411",
       "NJA00412", "NJA00404", "NJA00405", "NJA00406", "NJA00408", "NJA00409",
-      "NJA00413"
+      "NJA00413", "NJA00602", "NJA00608", "NJA00609", "NJA00801"
     ),
     NA, GFP)
   ) %>%
@@ -121,9 +118,16 @@ plateData <- paths[grepl("Meta", paths)] %>%
       "NJA00110", "NJA00101", "NJA00111", "NJA00107", "NJA00102", "NJA00103",
       "NJA00104", "NJA00109", "NJA00201", "NJA00204", "NJA00205", "NJA00206",
       "NJA00402", "NJA00403", "NJA00411", "NJA00412", "NJA00404", "NJA00405",
-      "NJA00406", "NJA00408", "NJA00409", "NJA00413"
+      "NJA00406", "NJA00408", "NJA00409", "NJA00413", "NJA00602", "NJA00608", 
+      "NJA00609", "NJA00801"
     ),
-    mouse = c(1, 1, 1, 1, 1, 1, 1, 1, 2, 2, 2, 2, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4)
+    mouse = c(
+      1, 1, 1, 1, 1, 1,
+      1, 1, 2, 2, 2, 2,
+      4, 4, 4, 4, 4, 4,
+      4, 4, 4, 4, 6, 6,
+      6, 8
+    )
   ) %>%
   annotateTissue(
     .,
@@ -131,13 +135,15 @@ plateData <- paths[grepl("Meta", paths)] %>%
       "NJA00101", "NJA00102", "NJA00103", "NJA00104", "NJA00107", "NJA00109",
       "NJA00110", "NJA00111", "NJA00201", "NJA00204", "NJA00205", "NJA00206",
       "NJA00402", "NJA00403", "NJA00411", "NJA00412", "NJA00404", "NJA00405",
-      "NJA00406", "NJA00408", "NJA00409", "NJA00413"
+      "NJA00406", "NJA00408", "NJA00409", "NJA00413", "NJA00602", "NJA00608", 
+      "NJA00609", "NJA00801"
     ),
     tissue = c(
       "SI", "SI", "SI", "SI", "SI", "colon",
       "colon", "colon", "colon", "colon", "colon", "colon",
       "SI", "SI", "colon", "colon", "SI", "SI", "SI",
-      "colon", "colon", "colon"
+      "colon", "colon", "colon", "SI", "colon", 
+      "colon", "SI"
     )
   ) %>%
   dplyr::mutate(cellNumber = dplyr::if_else(
