@@ -14,7 +14,8 @@ Imports:
     dplyr,
     stringr,
     tibble,
-    openxlsx,
+    openxlsx (>= 4.0.17),
+    googledrive (>= 0.1.1),
     readr,
     purrr
 Suggests: 
