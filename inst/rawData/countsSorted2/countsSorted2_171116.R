@@ -8,9 +8,17 @@ cat('Processing countsSorted2.\n')
 googledrive::drive_auth(oauth_token = "inst/extData/gd.rds")
 
 #download data
-googledrive::drive_download(file = 'countsSorted2_171116.txt', path = './inst/rawData/countsSorted2/countsSorted2_171116.txt', overwrite = TRUE)
+googledrive::drive_download(
+  file = 'countsSorted2_171116.txt',
+  path = './inst/rawData/countsSorted2/countsSorted2_171116.txt',
+  overwrite = TRUE
+)
 
-googledrive::drive_download(file = 'countsSortedMeta2_171116.txt', path = './inst/rawData/countsSorted2/countsSortedMeta2_171116.txt', overwrite = TRUE)
+googledrive::drive_download(
+  file = 'countsSortedMeta2_171116.txt',
+  path = './inst/rawData/countsSorted2/countsSortedMeta2_171116.txt',
+  overwrite = TRUE
+)
 
 #load counts
 path <- './inst/rawData/countsSorted2/countsSorted2_171116.txt'
@@ -65,9 +73,17 @@ annotatePlate(.) %>%
 annotateRow(.) %>%
 annotateColumn(.) %>%
 annotateCellNumber(., plate = "NJB00201", row = 1:8, column = 1:12) %>%
-countsSorted2_cellTypes(.)
+countsSorted2_cellTypes(.) %>%
+dplyr::mutate(filtered = dplyr::if_else(sample %in% colnames(counts), FALSE, TRUE))
 
 #rename and save
+if(!all(colnames(counts) %in% plateData$sample)) {
+  stop("all counts data not present in meta data")
+}
+if(!all(colnames(countsERCC) %in% plateData$sample)) {
+  stop("all ercc data not present in meta data")
+}
+
 countsSorted2 <- counts
 countsSortedERCC2 <- countsERCC
 countsSortedMeta2 <- plateData
