@@ -20,7 +20,7 @@ files <- c(
   'countsMgfpMeta_180604.txt'
 )
 
-paths <- paths <- file.path('./inst/rawData/countsMgfp', files)
+paths <- file.path('./inst/rawData/countsMgfp', files)
 
 trash <- map2(files, paths, function(file, path) {
   googledrive::drive_download(file, path, overwrite = TRUE)
@@ -156,6 +156,14 @@ plateData <- paths[grepl("Meta", paths)] %>%
 countsMgfp <- counts
 countsMgfpERCC <- countsERCC
 countsMgfpMeta <- plateData
+
+if(all(!colnames(countsMgfp) %in% countsMgfpMeta$sample)) {
+  stop("all counts data not present in meta data")
+}
+if(all(!colnames(countsMgfpERCC) %in% countsMgfpMeta$sample)) {
+  stop("all ercc data not present in meta data")
+}
+
 save(
   countsMgfp,
   countsMgfpERCC,
