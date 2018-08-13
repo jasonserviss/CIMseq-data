@@ -17,7 +17,9 @@ files <- c(
   'countsMgfp_180427.txt',
   'countsMgfpMeta_180427.txt',
   'countsMgfp_180604.txt',
-  'countsMgfpMeta_180604.txt'
+  'countsMgfpMeta_180604.txt',
+  'countsMgfp_180810.txt',
+  'countsMgfpMeta_180810.txt'
 )
 
 paths <- file.path('./inst/rawData/countsMgfp', files)
@@ -28,9 +30,6 @@ trash <- map2(files, paths, function(file, path) {
 rm(trash)
 
 #load counts
-#several samples are only NA. find with table(apply(counts, 2, function(x) all(is.na(x))))
-#Regev data identified by "SRR" in colnames
-
 dataFiles <- paths[!grepl("Meta", paths)]
 loaded <- map(dataFiles, read.table, header = TRUE, sep = "\t")
 counts <- reduce(loaded, full_join, by = "HGN")
@@ -43,9 +42,6 @@ if(sum(is.na(counts)) > 0) {
 #move genes to rownames
 counts <- moveGenesToRownames(counts)
 
-#remove "htseq" suffix
-#counts <- removeHTSEQsuffix(counts)
-
 #label singlets and multiplets
 #ids should include SINGLET plates only
 ids <- c(
@@ -53,7 +49,10 @@ ids <- c(
   "NJA00109", "NJA00204", "NJA00205", "NJA00206",
   "NJA00402", "NJA00403", "NJA00411", "NJA00412",
   "NJA00404", "NJA00405", "NJA00408", "NJA00409",
-  "NJA00602", "NJA00608", "NJA00609", "NJA00801"
+  "NJA00602", "NJA00608", "NJA00609", "NJA00801",
+  "NJA01202\\.[A-Z][0-1][0-8]", "NJA01202\\.[A-Z]09",
+  "NJA01203\\.[A-Z][0-1][4-9]", "NJA01203\\.[A-Z]1[0-1]",
+  "NJA01205\\.[A-Z][1-4]"
 )
 counts <- labelSingletsAndMultiplets(counts, ids)
 
@@ -108,7 +107,8 @@ plateData <- paths[grepl("Meta", paths)] %>%
     plate %in% c(
       "NJA00204", "NJA00205", "NJA00206", "NJA00402", "NJA00403", "NJA00411",
       "NJA00412", "NJA00404", "NJA00405", "NJA00406", "NJA00408", "NJA00409",
-      "NJA00413", "NJA00602", "NJA00608", "NJA00609", "NJA00801"
+      "NJA00413", "NJA00602", "NJA00608", "NJA00609", "NJA00801", "NJA01202",
+      "NJA01203", "NJA01205"
     ),
     NA, GFP)
   ) %>%
@@ -118,15 +118,15 @@ plateData <- paths[grepl("Meta", paths)] %>%
       "NJA00110", "NJA00101", "NJA00111", "NJA00107", "NJA00102", "NJA00103",
       "NJA00104", "NJA00109", "NJA00201", "NJA00204", "NJA00205", "NJA00206",
       "NJA00402", "NJA00403", "NJA00411", "NJA00412", "NJA00404", "NJA00405",
-      "NJA00406", "NJA00408", "NJA00409", "NJA00413", "NJA00602", "NJA00608", 
-      "NJA00609", "NJA00801"
+      "NJA00406", "NJA00408", "NJA00409", "NJA00413", "NJA00602", "NJA00608",
+      "NJA00609", "NJA00801", "NJA01202", "NJA01203", "NJA01205"
     ),
     mouse = c(
       1, 1, 1, 1, 1, 1,
       1, 1, 2, 2, 2, 2,
       4, 4, 4, 4, 4, 4,
       4, 4, 4, 4, 6, 6,
-      6, 8
+      6, 8, 12, 12, 12
     )
   ) %>%
   annotateTissue(
@@ -135,20 +135,19 @@ plateData <- paths[grepl("Meta", paths)] %>%
       "NJA00101", "NJA00102", "NJA00103", "NJA00104", "NJA00107", "NJA00109",
       "NJA00110", "NJA00111", "NJA00201", "NJA00204", "NJA00205", "NJA00206",
       "NJA00402", "NJA00403", "NJA00411", "NJA00412", "NJA00404", "NJA00405",
-      "NJA00406", "NJA00408", "NJA00409", "NJA00413", "NJA00602", "NJA00608", 
-      "NJA00609", "NJA00801"
+      "NJA00406", "NJA00408", "NJA00409", "NJA00413", "NJA00602", "NJA00608",
+      "NJA00609", "NJA00801", "NJA01202", "NJA01203", "NJA01205"
     ),
     tissue = c(
       "SI", "SI", "SI", "SI", "SI", "colon",
       "colon", "colon", "colon", "colon", "colon", "colon",
       "SI", "SI", "colon", "colon", "SI", "SI", "SI",
-      "colon", "colon", "colon", "SI", "colon", 
-      "colon", "SI"
+      "colon", "colon", "colon", "SI", "colon",
+      "colon", "SI", "SI", "colon", "colon"
     )
   ) %>%
   dplyr::mutate(cellNumber = dplyr::if_else(
-    stringr::str_detect(sample, "^s"),
-    "Singlet", "Multiplet")
+    stringr::str_detect(sample, "^s"), "Singlet", "Multiplet")
   ) %>%
   dplyr::mutate(filtered = dplyr::if_else(sample %in% colnames(counts), FALSE, TRUE))
 
