@@ -67,7 +67,7 @@ NULL
 #' @importFrom stringr str_replace
 
 annotatePlate <- function(data) {
-  mutate(data, plate = str_replace(sample, "^^.\\.([A-Z0-9]*)\\....", "\\1"))
+  mutate(data, plate = str_replace(sample, "^.\\.([A-Z0-9]*)\\....?", "\\1"))
 }
 
 #' Annotate row.
@@ -92,8 +92,8 @@ NULL
 
 annotateRow <- function(data) {
   data %>%
-  mutate(rowPos = str_replace(sample, "^.\\.[A-Z0-9]*\\.(.)..", "\\1")) %>%
-  mutate(row = match(rowPos, LETTERS[1:8])) %>%
+  mutate(rowPos = str_replace(sample, "^.\\.[A-Z0-9]*\\.(.)..?", "\\1")) %>%
+  mutate(row = match(rowPos, LETTERS)) %>%
   select(-rowPos)
 }
 
@@ -119,14 +119,15 @@ NULL
 
 annotateColumn <- function(data) {
   data %>%
-  mutate(colPos = str_replace(sample, "^.\\.[A-Z0-9]*\\..(..)", "\\1")) %>%
+  mutate(colPos = str_replace(sample, "^.\\.[A-Z0-9]*\\..(..?)", "\\1")) %>%
   mutate(column = case_when(
   colPos == "01" ~ 1L, colPos == "02" ~ 2L, colPos == "03" ~ 3L,
   colPos == "04" ~ 4L, colPos == "05" ~ 5L, colPos == "06" ~ 6L,
   colPos == "07" ~ 7L, colPos == "08" ~ 8L, colPos == "09" ~ 9L,
   colPos == "10" ~ 10L, colPos == "11" ~ 11L, colPos == "12" ~ 12L,
   colPos == "13" ~ 13L, colPos == "14" ~ 14L, colPos == "15" ~ 15L,
-  colPos == "16" ~ 16L, colPos == "17" ~ 17L, colPos == "18" ~ 18L
+  colPos == "16" ~ 16L, colPos == "17" ~ 17L, colPos == "18" ~ 18L,
+  is.integer(as.integer(colPos)) ~ as.integer(colPos), TRUE ~ 0L
   )) %>%
   select(-colPos)
 }
