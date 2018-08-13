@@ -5,7 +5,7 @@ packages <- c("sp.scRNAseqData", "tidyverse")
 purrr::walk(packages, library, character.only = TRUE)
 rm(packages)
 
-cat('Processing countsMgfp.\n')
+cat('Processing countsMgfpTumor.\n')
 googledrive::drive_auth(oauth_token = "inst/extData/gd.rds")
 
 #download raw data
