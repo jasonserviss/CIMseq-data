@@ -56,7 +56,7 @@ counts <- counts[detectLowQualityGenes(counts, mincount = 0), ]
 lqc <- detectLowQualityCells(
   counts,
   geneName = "Actb",
-  mincount = 1e5,
+  mincount = 1e4,
   quantileCut = 0.01
 )
 counts <- counts[, lqc]
