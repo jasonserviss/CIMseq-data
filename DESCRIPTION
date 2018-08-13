@@ -1,6 +1,6 @@
 Package: sp.scRNAseqData
 Title: Data and processing functions for the sp.scRNAseqTesting package
-Version: 0.0.1.0
+Version: 0.0.1.1
 Authors@R: c(
     person("Jason T.", "Serviss", email = "Jason.serviss@ki.se", role = c("aut", "cre"), comment = c(ORCID = 0000-0002-5778-7014)))
 Author: Jason T. Serviss
