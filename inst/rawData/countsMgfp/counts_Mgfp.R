@@ -19,7 +19,9 @@ files <- c(
   'countsMgfp_180604.txt',
   'countsMgfpMeta_180604.txt',
   'countsMgfp_180810.txt',
-  'countsMgfpMeta_180810.txt'
+  'countsMgfpMeta_180810.txt',
+  'countsMgfp_180910.txt',
+  'countsMgfpMeta_180910.txt'
 )
 
 paths <- file.path('./inst/rawData/countsMgfp', files)
@@ -52,7 +54,11 @@ ids <- c(
   "NJA00602", "NJA00608", "NJA00609", "NJA00801",
   "NJA01202\\.[A-Z][0-1][0-8]", "NJA01202\\.[A-Z]09",
   "NJA01203\\.[A-Z][0-1][4-9]", "NJA01203\\.[A-Z]1[0-1]",
-  "NJA01205\\.[A-Z][1-4]"
+  "NJA01205\\.[A-Z][1-4]", "NJA01301\\.[A-Z][0][1-9]",
+  "NJA01301\\.[A-Z][1][0-8]", "NJA01302\\.[A-Z][0][1-9]",
+  "NJA01302\\.[A-Z][1][0-8]", "NJA01303\\.[A-Z][0][1-9]",
+  "NJA01303\\.[A-Z][1][0-8]", "NJA01401\\.[A-Z][0][1-9]",
+  "NJA01401\\.[A-Z][1][0-8]"
 )
 counts <- labelSingletsAndMultiplets(counts, ids)
 
@@ -108,7 +114,7 @@ plateData <- paths[grepl("Meta", paths)] %>%
       "NJA00204", "NJA00205", "NJA00206", "NJA00402", "NJA00403", "NJA00411",
       "NJA00412", "NJA00404", "NJA00405", "NJA00406", "NJA00408", "NJA00409",
       "NJA00413", "NJA00602", "NJA00608", "NJA00609", "NJA00801", "NJA01202",
-      "NJA01203", "NJA01205"
+      "NJA01203", "NJA01205", "NJA01301", "NJA01302", "NJA01303", "NJA01401"
     ),
     NA, GFP)
   ) %>%
@@ -119,14 +125,16 @@ plateData <- paths[grepl("Meta", paths)] %>%
       "NJA00104", "NJA00109", "NJA00201", "NJA00204", "NJA00205", "NJA00206",
       "NJA00402", "NJA00403", "NJA00411", "NJA00412", "NJA00404", "NJA00405",
       "NJA00406", "NJA00408", "NJA00409", "NJA00413", "NJA00602", "NJA00608",
-      "NJA00609", "NJA00801", "NJA01202", "NJA01203", "NJA01205"
+      "NJA00609", "NJA00801", "NJA01202", "NJA01203", "NJA01205", "NJA01301",
+      "NJA01302", "NJA01303", "NJA01304"
     ),
     mouse = c(
       1, 1, 1, 1, 1, 1,
       1, 1, 2, 2, 2, 2,
       4, 4, 4, 4, 4, 4,
       4, 4, 4, 4, 6, 6,
-      6, 8, 12, 12, 12
+      6, 8, 12, 12, 12,
+      13, 13, 13, 14
     )
   ) %>%
   annotateTissue(
@@ -136,14 +144,16 @@ plateData <- paths[grepl("Meta", paths)] %>%
       "NJA00110", "NJA00111", "NJA00201", "NJA00204", "NJA00205", "NJA00206",
       "NJA00402", "NJA00403", "NJA00411", "NJA00412", "NJA00404", "NJA00405",
       "NJA00406", "NJA00408", "NJA00409", "NJA00413", "NJA00602", "NJA00608",
-      "NJA00609", "NJA00801", "NJA01202", "NJA01203", "NJA01205"
+      "NJA00609", "NJA00801", "NJA01202", "NJA01203", "NJA01205", "NJA01301",
+      "NJA01302", "NJA01303", "NJA01304"
     ),
     tissue = c(
       "SI", "SI", "SI", "SI", "SI", "colon",
       "colon", "colon", "colon", "colon", "colon", "colon",
       "SI", "SI", "colon", "colon", "SI", "SI", "SI",
       "colon", "colon", "colon", "SI", "colon",
-      "colon", "SI", "SI", "colon", "colon"
+      "colon", "SI", "SI", "colon", "colon", "SI",
+      "SI", "colon", "colon"
     )
   ) %>%
   dplyr::mutate(cellNumber = dplyr::if_else(
