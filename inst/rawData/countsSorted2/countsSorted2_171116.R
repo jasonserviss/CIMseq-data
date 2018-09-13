@@ -23,9 +23,6 @@ googledrive::drive_download(
 #load counts
 path <- './inst/rawData/countsSorted2/countsSorted2_171116.txt'
 counts <- read.table(path, header = TRUE)
-#bool1 <- grepl("NJB00201", colnames(counts)) | grepl("NJB00204", colnames(counts))
-#bool2 <- colnames(counts) == "HGN"
-#counts <- counts[, bool1 | bool2]
 
 #check for NAs
 if(sum(is.na(counts)) > 0) {
@@ -53,11 +50,11 @@ counts <- counts[!detectNonGenes(counts), ]
 counts <- counts[detectLowQualityGenes(counts), ]
 
 #remove cells with poor coverage
-lqc <- detectLowQualityCells(
-  counts,
-  mincount = 4e4,
-  quantileCut = 0.01
-)
+lqc.totalCounts <- detectLowQualityCells.totalCounts(counts, mincount = 4e4)
+lqc.housekeeping <- detectLowQualityCells.housekeeping(counts, geneName = "Actb", quantileCut = 0.01)
+lqc.ERCCfrac <- detectLowQualityCells.ERCCfrac(counts, countsERCC, percentile = 0.99)
+lqc <- lqc.totalCounts & lqc.housekeeping & lqc.ERCCfrac
+print(paste0("Removing a total of ", sum(!lqc), " cells based on the calculated metrics."))
 counts <- counts[, lqc]
 countsERCC <- countsERCC[, lqc]
 

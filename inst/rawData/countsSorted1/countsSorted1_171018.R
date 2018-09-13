@@ -10,48 +10,48 @@ googledrive::drive_download(file = 'countsSorted1_171018.txt', path = './inst/ra
 #NJB00101 is the singlets plate, NJB00103 is doublets (according to your scheme).
 
 path <- './inst/rawData/countsSorted1/countsSorted1_171018.txt'
-countsMe <- read.table(path, sep = "\t", header = TRUE)
+counts <- read.table(path, sep = "\t", header = TRUE)
 
 #check for NAs
-if(sum(is.na(countsMe)) > 0) {
+if(sum(is.na(counts)) > 0) {
   stop("NAs in counts data.")
 }
 
 #move genes to rownames
-countsMe <- moveGenesToRownames(countsMe)
+counts <- moveGenesToRownames(counts)
 
 #annotate singlets and multiplets
-countsMe <- labelSingletsAndMultiplets(countsMe, "NJB00101")
+counts <- labelSingletsAndMultiplets(counts, "NJB00101")
 
 #remove "htseq" suffix
-countsMe <- removeHTSEQsuffix(countsMe)
+counts <- removeHTSEQsuffix(counts)
 
 #extract ERCC
-ercc <- detectERCCreads(countsMe)
-countsERCC <- countsMe[ercc, ]
-countsMe <- countsMe[!ercc, ]
+ercc <- detectERCCreads(counts)
+countsERCC <- counts[ercc, ]
+counts <- counts[!ercc, ]
 
 #remove non-genes
-countsMe <- countsMe[!detectNonGenes(countsMe), ]
+counts <- counts[!detectNonGenes(counts), ]
 
 #remove genes with low counts
-countsMe <- countsMe[detectLowQualityGenes(countsMe), ]
+counts <- counts[detectLowQualityGenes(counts), ]
 
 #remove cells with poor coverage
-lqc <- detectLowQualityCells(
-  countsMe,
-  mincount = 4e4,
-  quantileCut = 0.01
-)
+lqc.totalCounts <- detectLowQualityCells.totalCounts(counts, mincount = 4e4)
+lqc.housekeeping <- detectLowQualityCells.housekeeping(counts, geneName = "Actb", quantileCut = 0.01)
+lqc.ERCCfrac <- detectLowQualityCells.ERCCfrac(counts, countsERCC, percentile = 0.99)
+lqc <- lqc.totalCounts & lqc.housekeeping & lqc.ERCCfrac
+print(paste0("Removing a total of ", sum(!lqc), " cells based on the calculated metrics."))
 countsERCC <- countsERCC[, lqc]
-countsMe <- countsMe[, lqc]
+counts <- counts[, lqc]
 
 #coerce to matrix
-countsMe <- convertCountsToMatrix(countsMe)
+counts <- convertCountsToMatrix(counts)
 countsERCC <- convertCountsToMatrix(countsERCC)
 
 #rename and save
-countsSorted1 <- countsMe
+countsSorted1 <- counts
 countsSortedERCC1 <- countsERCC
 save(
   countsSorted1,
