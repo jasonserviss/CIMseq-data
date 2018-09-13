@@ -77,12 +77,12 @@ counts <- counts[!detectNonGenes(counts), ]
 counts <- counts[detectLowQualityGenes(counts, mincount = 0), ]
 
 #remove low quality cells
-lqc <- detectLowQualityCells(
-  counts,
-  geneName = "Actb",
-  mincount = 1e4,
-  quantileCut = 0.01
-)
+lqc.totalCounts <- detectLowQualityCells.totalCounts(counts, mincount = 1e4)
+lqc.housekeeping <- detectLowQualityCells.housekeeping(counts, geneName = "Actb", quantileCut = 0.01)
+lqc.ERCCfrac <- detectLowQualityCells.ERCCfrac(counts, countsERCC, percentile = 0.99)
+
+lqc <- lqc.totalCounts & lqc.housekeeping & lqc.ERCCfrac
+print(paste0("Removing a total of ", sum(!lqc), " cells based on the calculated metrics."))
 counts <- counts[, lqc]
 countsERCC <- countsERCC[, lqc]
 
