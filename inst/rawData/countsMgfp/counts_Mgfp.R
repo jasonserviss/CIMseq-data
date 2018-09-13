@@ -126,7 +126,7 @@ plateData <- paths[grepl("Meta", paths)] %>%
       "NJA00402", "NJA00403", "NJA00411", "NJA00412", "NJA00404", "NJA00405",
       "NJA00406", "NJA00408", "NJA00409", "NJA00413", "NJA00602", "NJA00608",
       "NJA00609", "NJA00801", "NJA01202", "NJA01203", "NJA01205", "NJA01301",
-      "NJA01302", "NJA01303", "NJA01304"
+      "NJA01302", "NJA01303", "NJA01401"
     ),
     mouse = c(
       1, 1, 1, 1, 1, 1,
@@ -145,7 +145,7 @@ plateData <- paths[grepl("Meta", paths)] %>%
       "NJA00402", "NJA00403", "NJA00411", "NJA00412", "NJA00404", "NJA00405",
       "NJA00406", "NJA00408", "NJA00409", "NJA00413", "NJA00602", "NJA00608",
       "NJA00609", "NJA00801", "NJA01202", "NJA01203", "NJA01205", "NJA01301",
-      "NJA01302", "NJA01303", "NJA01304"
+      "NJA01302", "NJA01303", "NJA01401"
     ),
     tissue = c(
       "SI", "SI", "SI", "SI", "SI", "colon",
