@@ -39,7 +39,7 @@ counts <- counts[detectLowQualityGenes(counts), ]
 
 #remove cells with poor coverage
 lqc.totalCounts <- detectLowQualityCells.totalCounts(counts, mincount = 4e4)
-lqc.housekeeping <- detectLowQualityCells.housekeeping(counts, geneName = "Actb", quantileCut = 0.01)
+lqc.housekeeping <- detectLowQualityCells.housekeeping(counts, geneName = "ACTB", quantileCut = 0.01)
 lqc.ERCCfrac <- detectLowQualityCells.ERCCfrac(counts, countsERCC, percentile = 0.99)
 lqc <- lqc.totalCounts & lqc.housekeeping & lqc.ERCCfrac
 print(paste0("Removing a total of ", sum(!lqc), " cells based on the calculated metrics."))
