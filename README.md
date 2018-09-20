@@ -1,4 +1,4 @@
-<a href="https://travis-ci.com/jasonserviss/sp.scRNAseqData"><img src="https://travis-ci.com/jasonserviss/sp.scRNAseqData.svg?token=8VXNvJpmRV9RpFtTcJYW&branch=master"></a>
+Build Status: <a href="https://travis-ci.org/jasonserviss/sp.scRNAseqData"><img src="https://travis-ci.org/jasonserviss/sp.scRNAseqData.svg?branch=master"></a>
 
 # sp.scRNAseqData
 
