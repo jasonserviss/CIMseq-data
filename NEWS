@@ -1,0 +1,9 @@
+* v.0.0.1.2
+1a976d79e88a98160cc3cc77eead5880d4186519 : -
+- dividing cell QC into 3 functions
+
+* v.0.0.1.1
+b81b2f1ed77f6e77069b568b0adb53151571b23d : d7a16fa50edd79ce36b34941a887e8b8e7a9b327
+- adding 180810 countsMgfp data
+- adding countsMgfpTumor data
+- adding 180910 countsMgfp data
