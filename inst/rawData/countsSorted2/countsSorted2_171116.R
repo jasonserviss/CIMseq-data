@@ -14,11 +14,14 @@ googledrive::drive_download(
   overwrite = TRUE
 )
 
-googledrive::drive_download(
-  file = 'countsSortedMeta2_171116.txt',
-  path = './inst/rawData/countsSorted2/countsSortedMeta2_171116.txt',
-  overwrite = TRUE
-)
+plates <- c("NJB00204", "NJB00201")
+plateData <- purrr::map_dfr(plates, function(p) {
+  metadata(p, 'data/Sorted.multiplets/annotation')
+}) %>%
+  dplyr::mutate(prefix = dplyr::if_else(cellNumber == "Singlet", "s.", "m.")) %>%
+  dplyr::mutate(sample = paste0(prefix, unique_key, ".", Well)) %>%
+  dplyr::select(-prefix) %>%
+  dplyr::select(sample, dplyr::everything())
 
 #load counts
 path <- './inst/rawData/countsSorted2/countsSorted2_171116.txt'
@@ -63,15 +66,8 @@ counts <- convertCountsToMatrix(counts)
 countsERCC <- convertCountsToMatrix(countsERCC)
 
 #setup metadata
-plateData <- loadMetaData('./inst/rawData/countsSorted2/countsSortedMeta2_171116.txt') %>%
-dplyr::mutate(sample = removeHTSEQsuffix(sample)) %>%
-dplyr::mutate(sample = labelSingletsAndMultiplets(sample, "NJB00201")) %>%
-annotatePlate(.) %>%
-annotateRow(.) %>%
-annotateColumn(.) %>%
-annotateCellNumber(., plate = "NJB00201", row = 1:8, column = 1:12) %>%
-countsSorted2_cellTypes(.) %>%
-dplyr::mutate(filtered = dplyr::if_else(sample %in% colnames(counts), FALSE, TRUE))
+plateData <- plateData %>%
+  dplyr::mutate(filtered = dplyr::if_else(sample %in% colnames(counts), FALSE, TRUE))
 
 #rename and save
 if(!all(colnames(counts) %in% plateData$sample)) {
