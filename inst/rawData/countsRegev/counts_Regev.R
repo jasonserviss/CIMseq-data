@@ -14,12 +14,8 @@ googledrive::drive_download(
 )
 
 #load counts
-#Subset Regev data using SRR in colnames
 path <- './inst/rawData/countsRegev/counts_Regev.txt'
 counts <- read.table(path, header = TRUE, sep = "\t")
-#bool1 <- grepl("SRR", colnames(counts))
-#bool2 <- colnames(counts) == "HGN"
-#counts <- counts[, bool1 | bool2]
 
 #check for NAs
 if(sum(is.na(counts)) > 0) {
