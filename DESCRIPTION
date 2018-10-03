@@ -24,3 +24,4 @@ Suggests:
     rmarkdown,
     printr
 VignetteBuilder: knitr
+Remotes: EngeLab/EngeMetadata
