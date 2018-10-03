@@ -90,9 +90,8 @@ annotateTissue <- function(data, plate, tissue) {
 #' @name renameMgfpSamples
 #' @rdname renameMgfpSamples
 #' @param oldNames character; A character vector of the old names that have
-#'  already been processed by the labelSingletsAndMultiplets and
-#'  removeHTSEQsuffix functions. Names that are already in the new nomenclature
-#'  will not be effected.
+#'  already been processed by the removeHTSEQsuffix functions. Names that are
+#' already in the new nomenclature will not be effected.
 #' @return A character vector of the updated names.
 #' @author Jason Serviss
 #'
@@ -115,9 +114,6 @@ renameMgfpSamples <- function(oldNames) {
   posidx <- which(nchar(pos) == 3)
   pos[posidx] <- str_replace(pos[posidx], "(..)(.)", "\\10\\2")
   
-  #extract prefix
-  prefix <- str_extract(oldNames[bool], "^..")
-  
   #update plate info
   plate <- case_when(
     bool1 ~ "NJA00110",
@@ -129,6 +125,6 @@ renameMgfpSamples <- function(oldNames) {
   )
   
   #synthesize new names
-  plate[bool] <- paste0(prefix, plate[bool], pos)
+  plate[bool] <- paste0(plate[bool], pos)
   plate
 }

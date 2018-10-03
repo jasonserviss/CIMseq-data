@@ -5,9 +5,8 @@
 \title{Rename GFP mouse samples.}
 \arguments{
 \item{oldNames}{character; A character vector of the old names that have
-already been processed by the labelSingletsAndMultiplets and
-removeHTSEQsuffix functions. Names that are already in the new nomenclature
-will not be effected.}
+ already been processed by the removeHTSEQsuffix functions. Names that are
+already in the new nomenclature will not be effected.}
 }
 \value{
 A character vector of the updated names.
