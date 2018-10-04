@@ -32,8 +32,9 @@ counts <- removeHTSEQsuffix(counts)
 counts <- labelSingletsAndMultiplets(counts, "SRR")
 
 #extract ERCC
-#there are no ercc in the data
-table(detectERCCreads(counts))
+ercc <- detectERCCreads(counts)
+countsERCC <- counts[ercc, ]
+counts <- counts[!ercc, ]
 
 #remove non-genes
 counts <- counts[!detectNonGenes(counts), ]
@@ -44,18 +45,32 @@ counts <- counts[detectLowQualityGenes(counts), ]
 #remove low quality cells
 lqc.totalCounts <- detectLowQualityCells.totalCounts(counts, mincount = 1e4)
 lqc.housekeeping <- detectLowQualityCells.housekeeping(counts, geneName = "Actb", quantileCut = 0.01)
-lqc <- lqc.totalCounts & lqc.housekeeping
+lqc.ERCCfrac <- detectLowQualityCells.ERCCfrac(counts, countsERCC, percentile = 0.99)
+lqc <- lqc.totalCounts & lqc.housekeeping & lqc.ERCCfrac
 print(paste0("Removing a total of ", sum(!lqc), " cells based on the calculated metrics."))
 counts <- counts[, lqc]
+countsERCC <- countsERCC[, lqc]
 
 #coerce to matrix
 counts <- convertCountsToMatrix(counts)
+countsERCC <- convertCountsToMatrix(countsERCC)
 
 #rename and save
 countsRegev <- counts
+countsRegevERCC <- countsERCC
 
 save(
   countsRegev,
+  countsRegevERCC,
   file = "./data/countsRegev.rda",
   compress = "bzip2"
 )
+
+countsPath <- './inst/rawData/countsSorted2/countsRegev.txt'
+erccPath <- './inst/rawData/countsSorted2/countsRegevERCC.txt'
+
+write_tsv(as.data.frame(countsMgfp), path = countsPath)
+write_tsv(as.data.frame(countsMgfpERCC), path = erccPath)
+
+googledrive::drive_upload(countsPath, file.path(basePath, "processed_data/countsRegev.txt"))
+googledrive::drive_upload(erccPath, file.path(basePath, "processed_data/countsRegevERCC.txt"))

@@ -6,17 +6,18 @@ library(dplyr)
 cat('Processing countsSorted2.\n')
 
 googledrive::drive_auth(oauth_token = "inst/extData/gd.rds")
+basePath <- 'data/Sorted.multiplets'
 
 #download data
 googledrive::drive_download(
-  file = 'countsSorted2_171116.txt',
+  file = file.path(basePath, 'countsSorted2_171116.txt'),
   path = './inst/rawData/countsSorted2/countsSorted2_171116.txt',
   overwrite = TRUE
 )
 
 plates <- c("NJB00204", "NJB00201")
 plateData <- purrr::map_dfr(plates, function(p) {
-  metadata(p, 'data/Sorted.multiplets/annotation')
+  metadata(p, file.path(basePath, 'annotation'))
 }) %>%
   dplyr::mutate(prefix = dplyr::if_else(cellNumber == "Singlet", "s.", "m.")) %>%
   dplyr::mutate(sample = paste0(prefix, unique_key, ".", Well)) %>%
@@ -69,7 +70,7 @@ countsERCC <- convertCountsToMatrix(countsERCC)
 plateData <- plateData %>%
   dplyr::mutate(filtered = dplyr::if_else(sample %in% colnames(counts), FALSE, TRUE))
 
-#rename and save
+
 if(!all(colnames(counts) %in% plateData$sample)) {
   stop("all counts data not present in meta data")
 }
@@ -77,9 +78,11 @@ if(!all(colnames(countsERCC) %in% plateData$sample)) {
   stop("all ercc data not present in meta data")
 }
 
+#rename and save as .rda
 countsSorted2 <- counts
 countsSortedERCC2 <- countsERCC
 countsSortedMeta2 <- plateData
+
 save(
   countsSorted2,
   countsSortedERCC2,
@@ -87,3 +90,17 @@ save(
   file = "./data/countsSorted2.rda",
   compress = "bzip2"
 )
+
+#save processed data as text and upload to drive
+metaPath <- './inst/rawData/countsSorted2/countsSortedMeta2.txt'
+countsPath <- './inst/rawData/countsSorted2/countsSorted2.txt'
+erccPath <- './inst/rawData/countsSorted2/countsSortedMeta2.txt'
+
+write_tsv(countsMgfpMeta, path = metaPath)
+write_tsv(as.data.frame(countsMgfp), path = countsPath)
+write_tsv(as.data.frame(countsMgfpERCC), path = erccPath)
+
+googledrive::drive_upload(metaPath, file.path(basePath, "processed_data/countsSortedMeta2.txt"))
+googledrive::drive_upload(countsPath, file.path(basePath, "processed_data/countsSorted2.txt"))
+googledrive::drive_upload(erccPath, file.path(basePath, "processed_data/countsSortedMeta2.txt"))
+

@@ -7,6 +7,7 @@ rm(packages)
 
 cat('Processing countsMgfp.\n')
 
+basePath <- 'data/Mouse.gut.architecture'
 googledrive::drive_auth(oauth_token = "inst/extData/gd.rds")
 
 #download metadata
@@ -21,7 +22,7 @@ plates <- c(
 
 plateData <- purrr::map_dfr(plates, function(p) {
   path <- file.path(
-    'data/Mouse.gut.architecture/annotation', 
+    basePath, 'annotation',
     stringr::str_replace(p, "(.{6}).*", "\\1")
   )
   metadata(p, path)
@@ -112,6 +113,7 @@ if(all(!colnames(countsMgfpERCC) %in% countsMgfpMeta$sample)) {
   stop("all ercc data not present in meta data")
 }
 
+#save as .rda
 save(
   countsMgfp,
   countsMgfpERCC,
@@ -119,3 +121,16 @@ save(
   file = "./data/countsMgfp.rda",
   compress = "bzip2"
 )
+
+#save processed data as text and upload to drive
+metaPath <- './inst/rawData/countsMgfp/countsMgfpMeta.txt'
+countsPath <- './inst/rawData/countsMgfp/countsMgfp.txt'
+erccPath <- './inst/rawData/countsMgfp/countsMgfpERCC.txt'
+
+write_tsv(countsMgfpMeta, path = metaPath)
+write_tsv(as.data.frame(countsMgfp), path = countsPath)
+write_tsv(as.data.frame(countsMgfpERCC), path = erccPath)
+
+googledrive::drive_upload(metaPath, file.path(basePath, "processed_data/countsMgfpMeta.txt"))
+googledrive::drive_upload(countsPath, file.path(basePath, "processed_data/countsMgfp.txt"))
+googledrive::drive_upload(erccPath, file.path(basePath, "processed_data/countsMgfpERCC.txt"))
