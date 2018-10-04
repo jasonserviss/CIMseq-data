@@ -1,8 +1,10 @@
 #run from package root
 #source('./inst/rawData/countsSorted2/countsSorted2_171116.R')
 
-library(sp.scRNAseqData)
-library(dplyr)
+packages <- c("sp.scRNAseqData", "tidyverse", "EngeMetadata")
+purrr::walk(packages, library, character.only = TRUE)
+rm(packages)
+
 cat('Processing countsSorted2.\n')
 
 googledrive::drive_auth(oauth_token = "inst/extData/gd.rds")

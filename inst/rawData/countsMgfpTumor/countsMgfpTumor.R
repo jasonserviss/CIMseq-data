@@ -1,19 +1,28 @@
 #run from package root
 #source('inst/rawData/countsMgfp/counts_Mgfp.R')
 
-packages <- c("sp.scRNAseqData", "tidyverse")
+packages <- c("sp.scRNAseqData", "tidyverse", "EngeMetadata")
 purrr::walk(packages, library, character.only = TRUE)
 rm(packages)
 
 cat('Processing countsMgfpTumor.\n')
+basePath <- 'data/APCmin.mouse'
 googledrive::drive_auth(oauth_token = "inst/extData/gd.rds")
 
-#download raw data
-files <- c(
-  'countsMgfpTumor_180810.txt',
-  'countsMgfpTumorMeta_180810.txt'
-)
+#download metadata
+plates <- c("NJC01201")
 
+plateData <- purrr::map_dfr(plates, function(p) {
+  path <- file.path(basePath, 'annotation')
+  metadata(p, path)
+}) %>%
+  dplyr::mutate(prefix = dplyr::if_else(cellNumber == "Singlet", "s.", "m.")) %>%
+  dplyr::mutate(sample = paste0(prefix, unique_key, ".", Well)) %>%
+  dplyr::select(-prefix) %>%
+  dplyr::select(sample, dplyr::everything())
+
+#download raw data
+files <- c('countsMgfpTumor_180810.txt')
 paths <- file.path('./inst/rawData/countsMgfpTumor', files)
 
 trash <- map2(files, paths, function(file, path) {
@@ -36,10 +45,9 @@ counts <- moveGenesToRownames(counts)
 
 #label singlets and multiplets
 #ids should include SINGLET plates only
-ids <- c(
-  "NJC01201\\.[A-Z][1-4]"
-)
-counts <- labelSingletsAndMultiplets(counts, ids)
+singlets <- plateData[plateData$cellNumber == "Singlet", "sample"][[1]]
+singlets <- gsub("^..(.*)", "\\1", singlets)
+counts <- labelSingletsAndMultiplets(counts, singlets)
 
 #extract ERCC
 ercc <- detectERCCreads(counts)
@@ -64,29 +72,9 @@ countsERCC <- countsERCC[, lqc]
 #coerce to matrix
 counts <- convertCountsToMatrix(counts)
 countsERCC <- convertCountsToMatrix(countsERCC)
-
-#prepare metadata
-plateData <- paths[grepl("Meta", paths)] %>%
-  map(read_tsv) %>%
-  bind_rows() %>%
-  dplyr::mutate(sample = removeHTSEQsuffix(sample)) %>%
-  dplyr::mutate(sample = labelSingletsAndMultiplets(sample, ids)) %>%
-  annotatePlate(.) %>%
-  annotateRow(.) %>%
-  annotateColumn(.) %>%
-  annotateMouse(
-    .,
-    plate = c("NJC01201"),
-    mouse = c(12)
-  ) %>%
-  annotateTissue(
-    .,
-    plate = c("NJC01201"),
-    tissue = c("colon")
-  ) %>%
-  dplyr::mutate(cellNumber = dplyr::if_else(
-    stringr::str_detect(sample, "^s"), "Singlet", "Multiplet")
-  ) %>%
+  
+#add filtered column to metadata
+plateData <- plateData %>% 
   dplyr::mutate(filtered = dplyr::if_else(sample %in% colnames(counts), FALSE, TRUE))
 
 #rename and save
@@ -101,6 +89,7 @@ if(all(!colnames(countsMgfpTumorERCC) %in% countsMgfpTumorMeta$sample)) {
   stop("all ercc data not present in meta data")
 }
 
+#save as .rda
 save(
   countsMgfpTumor,
   countsMgfpTumorERCC,
@@ -108,3 +97,16 @@ save(
   file = "./data/countsMgfpTumor.rda",
   compress = "bzip2"
 )
+
+#save processed data as text and upload to drive
+metaPath <- './inst/rawData/countsMgfp/countsMgfpTumorMeta.txt'
+countsPath <- './inst/rawData/countsMgfp/countsMgfpTumor.txt'
+erccPath <- './inst/rawData/countsMgfp/countsMgfpTumorERCC.txt'
+
+write_tsv(countsMgfpTumorMeta, path = metaPath)
+write_tsv(as.data.frame(countsMgfpTumor), path = countsPath)
+write_tsv(as.data.frame(countsMgfpTumorERCC), path = erccPath)
+
+googledrive::drive_upload(metaPath, file.path(basePath, "processed_data/countsMgfpTumorMeta.txt"))
+googledrive::drive_upload(countsPath, file.path(basePath, "processed_data/countsMgfpTumor.txt"))
+googledrive::drive_upload(erccPath, file.path(basePath, "processed_data/countsMgfpTumorERCC.txt"))
