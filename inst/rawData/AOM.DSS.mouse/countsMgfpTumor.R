@@ -6,7 +6,7 @@ purrr::walk(packages, library, character.only = TRUE)
 rm(packages)
 
 cat('Processing countsMgfpTumor.\n')
-basePath <- 'data/APCmin.mouse'
+basePath <- 'data/AOM.DSS.mouse'
 googledrive::drive_auth(oauth_token = "inst/extData/gd.rds")
 
 #download metadata
@@ -23,7 +23,7 @@ plateData <- purrr::map_dfr(plates, function(p) {
 
 #download raw data
 files <- c('countsMgfpTumor_180810.txt')
-paths <- file.path('./inst/rawData/countsMgfpTumor', files)
+paths <- file.path('./inst/rawData/AOM.DSS.mouse', files)
 
 trash <- map2(files, paths, function(file, path) {
   googledrive::drive_download(file, path, overwrite = TRUE)
