@@ -134,3 +134,6 @@ write_tsv(as.data.frame(countsMgfpERCC), path = erccPath)
 googledrive::drive_upload(metaPath, file.path(basePath, "processed_data/countsMgfpMeta.txt"))
 googledrive::drive_upload(countsPath, file.path(basePath, "processed_data/countsMgfp.txt"))
 googledrive::drive_upload(erccPath, file.path(basePath, "processed_data/countsMgfpERCC.txt"))
+
+#delete all text files
+trash <- map(c(paths, metaPath, countsPath, erccPath), file.remove)

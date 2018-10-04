@@ -12,7 +12,7 @@ basePath <- 'data/Sorted.multiplets'
 
 #download data
 googledrive::drive_download(
-  file = file.path(basePath, 'countsSorted2_171116.txt'),
+  file = file.path(basePath, 'raw_data/countsSorted2_171116.txt'),
   path = './inst/rawData/countsSorted2/countsSorted2_171116.txt',
   overwrite = TRUE
 )
@@ -27,8 +27,8 @@ plateData <- purrr::map_dfr(plates, function(p) {
   dplyr::select(sample, dplyr::everything())
 
 #load counts
-path <- './inst/rawData/countsSorted2/countsSorted2_171116.txt'
-counts <- read.table(path, header = TRUE)
+paths <- './inst/rawData/countsSorted2/countsSorted2_171116.txt'
+counts <- read.table(paths, header = TRUE)
 
 #check for NAs
 if(sum(is.na(counts)) > 0) {
@@ -96,7 +96,7 @@ save(
 #save processed data as text and upload to drive
 metaPath <- './inst/rawData/countsSorted2/countsSortedMeta2.txt'
 countsPath <- './inst/rawData/countsSorted2/countsSorted2.txt'
-erccPath <- './inst/rawData/countsSorted2/countsSortedMeta2.txt'
+erccPath <- './inst/rawData/countsSorted2/countsSortedERCC2.txt'
 
 write_tsv(countsMgfpMeta, path = metaPath)
 write_tsv(as.data.frame(countsMgfp), path = countsPath)
@@ -104,5 +104,7 @@ write_tsv(as.data.frame(countsMgfpERCC), path = erccPath)
 
 googledrive::drive_upload(metaPath, file.path(basePath, "processed_data/countsSortedMeta2.txt"))
 googledrive::drive_upload(countsPath, file.path(basePath, "processed_data/countsSorted2.txt"))
-googledrive::drive_upload(erccPath, file.path(basePath, "processed_data/countsSortedMeta2.txt"))
+googledrive::drive_upload(erccPath, file.path(basePath, "processed_data/countsSortedERCC2.txt"))
 
+#delete all text files
+trash <- map(c(paths, metaPath, countsPath, erccPath), file.remove)

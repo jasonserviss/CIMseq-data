@@ -5,8 +5,10 @@ date: "`r Sys.Date()`"
 output: rmarkdown::html_vignette
 vignette: >
   %\VignetteIndexEntry{Vignette Title}
-  %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
+  %\VignetteEngine{knitr::rmarkdown}
+editor_options: 
+  chunk_output_type: console
 ---
 
 An example of how counts are typically filtered using the package functions.
@@ -68,9 +70,12 @@ testingCounts
 ```
 
 Detect low quality cells (samples).
+Low quality cell detection can also be done with `detectLowQualityCells.ERCCfrac`
+which uses ERCC reads to detect cells with a high fraction ERCC.
 ```{r}
-lqc <- detectLowQualityCells(testingCounts, 14)
-lqc
+lqc.totalCounts <- detectLowQualityCells.totalCounts(testingCounts, mincount = 25)
+lqc.housekeeping <- detectLowQualityCells.housekeeping(testingCounts, geneName = "ACTB", quantileCut = 0.01)
+lqc <- lqc.totalCounts & lqc.housekeeping
 testingCounts <- testingCounts[, lqc]
 testingCounts
 ```

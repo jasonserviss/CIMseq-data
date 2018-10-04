@@ -5,12 +5,17 @@ cat('Processing countsSorted1.\n')
 googledrive::drive_auth(oauth_token = "inst/extData/gd.rds")
 
 #download data
-googledrive::drive_download(file = 'countsSorted1_171018.txt', path = './inst/rawData/countsSorted1/countsSorted1_171018.txt', overwrite = TRUE)
+paths <- './inst/rawData/countsSorted1/countsSorted1_171018.txt'
+googledrive::drive_download(
+  file = 'countsSorted1_171018.txt',
+  path = paths,
+  overwrite = TRUE
+)
 
 #NJB00101 is the singlets plate, NJB00103 is doublets (according to your scheme).
 
-path <- './inst/rawData/countsSorted1/countsSorted1_171018.txt'
-counts <- read.table(path, sep = "\t", header = TRUE)
+paths <- './inst/rawData/countsSorted1/countsSorted1_171018.txt'
+counts <- read.table(paths, sep = "\t", header = TRUE)
 
 #check for NAs
 if(sum(is.na(counts)) > 0) {
@@ -59,3 +64,16 @@ save(
   file = "./data/countsSorted1.rda",
   compress = "bzip2"
 )
+
+#save processed data as text and upload to drive
+countsPath <- './inst/rawData/countsSorted2/countsSorted1.txt'
+erccPath <- './inst/rawData/countsSorted2/countsSortedERCC1.txt'
+
+write_tsv(as.data.frame(countsMgfp), path = countsPath)
+write_tsv(as.data.frame(countsMgfpERCC), path = erccPath)
+
+googledrive::drive_upload(countsPath, file.path(basePath, "processed_data/countsSorted1.txt"))
+googledrive::drive_upload(erccPath, file.path(basePath, "processed_data/countsSortedERCC1.txt"))
+
+#delete all text files
+trash <- map(c(paths, countsPath, erccPath), file.remove)

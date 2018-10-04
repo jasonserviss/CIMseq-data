@@ -11,9 +11,10 @@ cat('Processing fetalPancreas.\n')
 googledrive::drive_auth(oauth_token = "inst/extData/gd.rds")
 
 #download data
+paths <- './inst/rawData/fetalPancreas/fetalPancreasCounts.txt'
 googledrive::drive_download(
   file = 'fetalPancreasCounts.txt',
-  path = './inst/rawData/fetalPancreas/fetalPancreasCounts.txt',
+  path = paths,
   overwrite = TRUE
 )
 
@@ -39,4 +40,7 @@ save(
   file = 'data/fetalPancreasCounts.rda',
   compress = 'bzip2'
 )
+
+#delete all text files
+trash <- map(c(paths), file.remove)
 

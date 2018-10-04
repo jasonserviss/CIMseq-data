@@ -5,7 +5,7 @@ packages <- c("sp.scRNAseqData", "tidyverse", "EngeMetadata")
 purrr::walk(packages, library, character.only = TRUE)
 rm(packages)
 
-cat('Processing countsMgfpTumor.\n')
+cat('Processing aomdssMouse\n')
 basePath <- 'data/AOM.DSS.mouse'
 googledrive::drive_auth(oauth_token = "inst/extData/gd.rds")
 
@@ -72,41 +72,45 @@ countsERCC <- countsERCC[, lqc]
 #coerce to matrix
 counts <- convertCountsToMatrix(counts)
 countsERCC <- convertCountsToMatrix(countsERCC)
-  
+
 #add filtered column to metadata
-plateData <- plateData %>% 
+plateData <- plateData %>%
   dplyr::mutate(filtered = dplyr::if_else(sample %in% colnames(counts), FALSE, TRUE))
 
 #rename and save
-countsMgfpTumor <- counts
-countsMgfpTumorERCC <- countsERCC
-countsMgfpTumorMeta <- plateData
+countsAomdss <- counts
+countsAomdssERCC <- countsERCC
+countsAomdssMeta <- plateData
 
-if(all(!colnames(countsMgfpTumor) %in% countsMgfpTumorMeta$sample)) {
+if(all(!colnames(countsAomdss) %in% countsAomdssMeta$sample)) {
   stop("all counts data not present in meta data")
 }
-if(all(!colnames(countsMgfpTumorERCC) %in% countsMgfpTumorMeta$sample)) {
+if(all(!colnames(countsAomdssERCC) %in% countsAomdssMeta$sample)) {
   stop("all ercc data not present in meta data")
 }
 
 #save as .rda
 save(
-  countsMgfpTumor,
-  countsMgfpTumorERCC,
-  countsMgfpTumorMeta,
-  file = "./data/countsMgfpTumor.rda",
+  countsAomdss,
+  countsAomdssERCC,
+  countsAomdssMeta,
+  file = "./data/countsAomdss.rda",
   compress = "bzip2"
 )
 
 #save processed data as text and upload to drive
-metaPath <- './inst/rawData/countsMgfp/countsMgfpTumorMeta.txt'
-countsPath <- './inst/rawData/countsMgfp/countsMgfpTumor.txt'
-erccPath <- './inst/rawData/countsMgfp/countsMgfpTumorERCC.txt'
+metaPath <- './inst/rawData/countsMgfp/countsAomdssMeta.txt'
+countsPath <- './inst/rawData/countsMgfp/countsAomdss.txt'
+erccPath <- './inst/rawData/countsMgfp/countsAomdssERCC.txt'
 
-write_tsv(countsMgfpTumorMeta, path = metaPath)
-write_tsv(as.data.frame(countsMgfpTumor), path = countsPath)
-write_tsv(as.data.frame(countsMgfpTumorERCC), path = erccPath)
+write_tsv(countsAomdssMeta, path = metaPath)
+write_tsv(as.data.frame(countsAomdss), path = countsPath)
+write_tsv(as.data.frame(countsAomdssERCC), path = erccPath)
 
-googledrive::drive_upload(metaPath, file.path(basePath, "processed_data/countsMgfpTumorMeta.txt"))
-googledrive::drive_upload(countsPath, file.path(basePath, "processed_data/countsMgfpTumor.txt"))
-googledrive::drive_upload(erccPath, file.path(basePath, "processed_data/countsMgfpTumorERCC.txt"))
+googledrive::drive_upload(metaPath, file.path(basePath, "processed_data/countsAomdssMeta.txt"))
+googledrive::drive_upload(countsPath, file.path(basePath, "processed_data/countsAomdss.txt"))
+googledrive::drive_upload(erccPath, file.path(basePath, "processed_data/countsAomdssERCC.txt"))
+
+#delete all text files
+trash <- map(c(paths, metaPath, countsPath, erccPath), file.remove)
+

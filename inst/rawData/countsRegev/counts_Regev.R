@@ -14,8 +14,8 @@ googledrive::drive_download(
 )
 
 #load counts
-path <- './inst/rawData/countsRegev/counts_Regev.txt'
-counts <- read.table(path, header = TRUE, sep = "\t")
+paths <- './inst/rawData/countsRegev/counts_Regev.txt'
+counts <- read.table(paths, header = TRUE, sep = "\t")
 
 #check for NAs
 if(sum(is.na(counts)) > 0) {
@@ -74,3 +74,6 @@ write_tsv(as.data.frame(countsMgfpERCC), path = erccPath)
 
 googledrive::drive_upload(countsPath, file.path(basePath, "processed_data/countsRegev.txt"))
 googledrive::drive_upload(erccPath, file.path(basePath, "processed_data/countsRegevERCC.txt"))
+
+#delete all text files
+trash <- map(c(paths, countsPath, erccPath), file.remove)
