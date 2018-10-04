@@ -1,7 +1,7 @@
 #run from package root
 #source('./inst/rawData/countsSorted2/countsSorted2_171116.R')
 
-packages <- c("sp.scRNAseqData", "tidyverse", "EngeMetadata")
+packages <- c("sp.scRNAseqData", "EngeMetadata")
 purrr::walk(packages, library, character.only = TRUE)
 rm(packages)
 

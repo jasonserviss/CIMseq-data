@@ -1,5 +1,6 @@
 #run from package root
 #source('inst/rawData/countsSorted1/countsSorted1_171018.R')
+library(sp.scRNAseqData)
 
 cat('Processing countsSorted1.\n')
 googledrive::drive_auth(oauth_token = "inst/extData/gd.rds")

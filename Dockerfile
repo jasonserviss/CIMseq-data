@@ -18,6 +18,10 @@ RUN Rscript -e "install.packages(c('devtools','knitr','rmarkdown','shiny','RCurl
 
 RUN Rscript -e "source('https://cdn.rawgit.com/road2stat/liftrlib/aa132a2d/install_cran.R');install_cran(c('openxlsx/4.0.17', 'googledrive/0.1.1'))"
 
+# Clone and install EngeMetadata
+RUN git clone https://github.com/EngeLab/EngeMetadata.git /home/EngeMetadata
+RUN Rscript -e "devtools::install('/home/EngeMetadata')"
+
 # Clone and install sp.scRNAseqData
 RUN git clone https://github.com/jasonserviss/sp.scRNAseqData.git /home/sp.scRNAseqData
 RUN Rscript -e "devtools::install('/home/sp.scRNAseqData')"
