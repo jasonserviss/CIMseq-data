@@ -1,7 +1,7 @@
 #run from package root
 #source('inst/rawData/countsMgfp/counts_Mgfp.R')
 
-packages <- c("sp.scRNAseqData", "EngeMetadata")
+packages <- c("sp.scRNAseqData", "EngeMetadata", "dplyr")
 purrr::walk(packages, library, character.only = TRUE)
 rm(packages)
 
@@ -25,15 +25,15 @@ plateData <- purrr::map_dfr(plates, function(p) {
 files <- c('countsMgfpTumor_180810.txt')
 paths <- file.path('./inst/rawData/AOM.DSS.mouse', files)
 
-trash <- map2(files, paths, function(file, path) {
+trash <- purrr::map2(files, paths, function(file, path) {
   googledrive::drive_download(file, path, overwrite = TRUE)
 })
 rm(trash)
 
 #load counts
 dataFiles <- paths[!grepl("Meta", paths)]
-loaded <- map(dataFiles, read.table, header = TRUE, sep = "\t")
-counts <- reduce(loaded, full_join, by = "HGN")
+loaded <- purrr::map(dataFiles, read.table, header = TRUE, sep = "\t")
+counts <- reduce(loaded, dplyr::full_join, by = "HGN")
 
 #check for NAs
 if(sum(is.na(counts)) > 0) {
