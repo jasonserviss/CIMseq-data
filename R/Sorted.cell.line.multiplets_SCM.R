@@ -9,7 +9,7 @@
 #'
 #' @title Counts data from sorted multiplets; experiment 2.
 #' @docType data
-#' @name SCM.counts
+#' @name SCM.Counts
 #' @format Two matrices, containing counts and ERCC counts, with:
 #' \describe{
 #' \item{rownames}{Gene names}
@@ -17,8 +17,8 @@
 #' }
 #' @keywords datasets
 #' @examples
-#' data(SCM.counts)
-"SCM.counts"
+#' data(SCM.Counts)
+"SCM.Counts"
 
 #' Counts, ERCC, and metadata for sorted cell lines.
 #'
@@ -31,7 +31,7 @@
 #'
 #' @title ERCC counts data from sorted multiplets; experiment 2.
 #' @docType data
-#' @name SCM.countsERCC
+#' @name SCM.CountsERCC
 #' @format Matrix containing ERCC counts, with:
 #' \describe{
 #' \item{rownames}{Gene names}
@@ -39,9 +39,9 @@
 #' }
 #' @keywords datasets
 #' @examples
-#' data(SCM.countsERCC)
+#' data(SCM.CountsERCC)
 #'
-"SCM.countsERCC"
+"SCM.CountsERCC"
 
 #' Counts, ERCC, and metadata for sorted cell lines.
 #'

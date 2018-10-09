@@ -340,6 +340,7 @@ detectLowQualityGenes <- function(
 #'
 NULL
 #' @export
+#' @importFrom stats quantile
 
 detectLowQualityCells.totalCounts <- function(
   counts,

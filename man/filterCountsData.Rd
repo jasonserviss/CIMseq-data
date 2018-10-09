@@ -4,11 +4,9 @@
 \alias{filterCountsData}
 \title{filterCountsData}
 \arguments{
-\item{counts}{data.frame; The formated counts data, via
-\code{\link{formatCountData}}.}
+\item{counts}{data.frame; The formated counts data.}
 
-\item{countsERCC}{data.frame; The formated counts ERCC data, via
-\code{\link{formatCountData}}.}
+\item{countsERCC}{data.frame; The formated counts ERCC data.}
 
 \item{filters}{Character; A vector indicating the types of filtering to be
 performed. Options include: "genes", "totalCounts",

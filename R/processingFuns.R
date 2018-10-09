@@ -20,6 +20,7 @@ NULL
 #' @importFrom EngeMetadata metadata
 
 getMetadata <- function(projectName) {
+  cellNumber <- prefix <- unique_key <- Well <- NULL
   annotationPath <- file.path('data', projectName, 'annotation')
   plates <- googledrive::drive_ls(annotationPath)$name
   meta <- purrr::map_dfr(plates, function(p) {
@@ -54,8 +55,10 @@ NULL
 #' @importFrom googledrive drive_ls drive_download
 #' @importFrom purrr map2 map reduce
 #' @importFrom dplyr full_join
+#' @importFrom utils read.table
 
 getCountsData <- function(projectName) {
+
   rawPath <- file.path('data', projectName, 'raw_counts')
   countsFiles <- googledrive::drive_ls(rawPath)$name
   fullPaths <- file.path(rawPath, countsFiles)
@@ -67,59 +70,8 @@ getCountsData <- function(projectName) {
   rm(trash)
 
   #load counts
-  loaded <- purrr::map(localPaths, read.table, header = TRUE, sep = "\t")
+  loaded <- purrr::map(localPaths, utils::read.table, header = TRUE, sep = "\t")
   purrr::reduce(loaded, dplyr::full_join, by = "HGN")
-}
-
-#' formatCountData
-#'
-#' This is a wrapper function for \code{\link{moveGenesToRownames}},
-#' \code{\link{labelSingletsAndMultiplets}},
-#' \code{\link{detectERCCreads}}, \code{\link{removeHTSEQsuffix}},
-#' and \code{\link{detectNonGenes}}. It uses the "cellNumber" column in the
-#' metadata to annotate singlets and multiplets and, therefore, the column must
-#' be present in the metadata. In addition, singlets should be named "Singlet"
-#' in the metadata. The function also checks for the presence of NAs in the
-#' counts data and returns an error if NA values are detected.
-#'
-#' @name formatCountData
-#' @rdname formatCountData
-#' @param counts data.frame; The unfiltered counts data including ERCC genes
-#' typically arising from the \code{\link{getCountsData}} function.
-#' @param metadata tibble; The metadata typically arising from the
-#' \code{\link{getMetadata}} function.
-#' @return A list with the formated counts as the first element and the formated
-#' ERCC reads as the second element.
-#' @author Jason Serviss
-#'
-NULL
-#' @export
-
-formatCountData <- function(counts, metadata) {
-  if(sum(is.na(counts)) > 0) {
-    stop("NAs in counts data.")
-  }
-
-  #move genes to rownames
-  counts <- moveGenesToRownames(counts)
-
-  #remove .htseq suffix
-  if(any(grepl("htseq", colnames(counts)))) counts <- removeHTSEQsuffix(counts)
-
-  #label singlets and multiplets ids should include SINGLET samples only
-  singlets <- metadata[metadata$cellNumber == "Singlet", "sample"][[1]]
-  singlets <- gsub("^..(.*)", "\\1", singlets)
-  counts <- labelSingletsAndMultiplets(counts, singlets)
-
-  #extract ERCC
-  ercc <- detectERCCreads(counts)
-  countsERCC <- counts[ercc, ]
-  counts <- counts[!ercc, ]
-
-  #remove non-genes
-  counts <- counts[!detectNonGenes(counts), ]
-
-  return(list(counts, countsERCC))
 }
 
 #' filterCountsData
@@ -137,10 +89,8 @@ formatCountData <- function(counts, metadata) {
 #'
 #' @name filterCountsData
 #' @rdname filterCountsData
-#' @param counts data.frame; The formated counts data, via
-#' \code{\link{formatCountData}}.
-#' @param countsERCC data.frame; The formated counts ERCC data, via
-#' \code{\link{formatCountData}}.
+#' @param counts data.frame; The formated counts data.
+#' @param countsERCC data.frame; The formated counts ERCC data.
 #' @param filters Character; A vector indicating the types of filtering to be
 #' performed. Options include: "genes", "totalCounts",
 #' "ERCCfrac", and "housekeeping".
@@ -268,6 +218,7 @@ NULL
 #' @importFrom googledrive drive_ls drive_mkdir drive_upload
 #' @importFrom purrr map2 map
 #' @importFrom stringr str_replace
+#' @importFrom utils write.table
 
 processedDataUpload <- function(projectName, ...) {
   data <- list(...)
@@ -287,7 +238,7 @@ processedDataUpload <- function(projectName, ...) {
 
   #save objects locally
   trash <- purrr::map2(data, names, function(d, n) {
-    write.table(
+    utils::write.table(
       as.data.frame(d),
       file = file.path(localPath, paste0(n, ".txt")),
       quote = FALSE, sep = "\t"
