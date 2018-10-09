@@ -4,6 +4,7 @@
 ignore <- c(
   './inst/rawData/permutations_171116/permutations.R',
   './inst/rawData/syntheticData/syntheticData.R',
+  './inst/rawData/countsSorted1/countsSorted1_171018.R',
   './inst/rawData/processRaw.R'
 )
 

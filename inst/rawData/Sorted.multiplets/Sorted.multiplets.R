@@ -1,19 +1,14 @@
 #run from package root
-#source('inst/rawData/fetalPancreas/fetalPancreasCounts.R')
+#source('./inst/rawData/countsSorted2/Sorted.multiplets.R')
 
 packages <- c("sp.scRNAseqData", "EngeMetadata", "dplyr")
 purrr::walk(packages, library, character.only = TRUE)
 rm(packages)
 
-projectName <- "Fetal.pancreas"
-cat(paste0('Processing ', projectName, '\n'))
-
-#fetalPancreasCounts
-#Should be 131 singlets and 69 multiplets.
-#Note: I never got the raw unfiltered counts.txt file for this from Martin.
+projectName <- "Sorted.multiplets"
+cat(paste0('Processing', projectName, '\n'))
 
 googledrive::drive_auth(oauth_token = "inst/extData/gd.rds")
-
 Meta <- getMetadata(projectName)
 if("Missing" %in% colnames(Meta)) {
   Meta <- Meta %>%
@@ -21,28 +16,43 @@ if("Missing" %in% colnames(Meta)) {
     select(-Missing)
 }
 
-#read counts data
 countData <- getCountsData(projectName)
+
+#move genes to rownames
+countData <- moveGenesToRownames(countData)
+
+#remove .htseq suffix
+if(any(grepl("htseq", colnames(countData)))) countData <- removeHTSEQsuffix(countData)
 
 #label singlets and multiplets ids should include SINGLET samples only
 singlets <- Meta[Meta$cellNumber == "Singlet", "sample"][[1]]
 singlets <- gsub("^..(.*)", "\\1", singlets)
-countData <- labelSingletsAndMultiplets(countData, singlets)
+counts <- labelSingletsAndMultiplets(countData, singlets)
 
 #extract ERCC
-ercc <- detectERCCreads(countData)
-CountsERCC <- countData[ercc, ]
-Counts <- countData[!ercc, ]
+ercc <- detectERCCreads(counts)
+countsERCC <- counts[ercc, ]
+counts <- counts[!ercc, ]
 
 #remove non-genes
-Counts <- Counts[!detectNonGenes(Counts), ]
+counts <- counts[!detectNonGenes(counts), ]
+namesPreFilter <- colnames(counts)
+
+data <- filterCountsData(
+  counts, countsERCC, geneMinCount = 0, cellMinCount = 4e4, geneName = "ACTB",
+  quantileCut = 0.01, percentile = 0.99
+)
 
 #check all count samples in meta and vice versa
-c1 <- all(!Meta$sample %in% colnames(Counts))
-c2 <- all(!colnames(Counts) %in% Meta$sample)
+c1 <- all(!Meta$sample %in% namesPreFilter)
+c2 <- all(!colnames(data[[1]]) %in% Meta$sample)
 if(c1 & c2) {
   stop("all counts data not present in meta data")
 }
+
+#rename
+Counts <- data[[1]]
+CountsERCC <- data[[2]]
 
 #save .rda
 saveRDA(projectName, Counts, CountsERCC, Meta)
