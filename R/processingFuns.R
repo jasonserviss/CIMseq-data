@@ -227,7 +227,7 @@ filterCountsData <- function(
 #'
 NULL
 #' @export
-#' @importFrom srtingr str_replace
+#' @importFrom stringr str_replace
 
 saveRDA <- function(projectName, ...) {
   data <- list(...)
@@ -267,7 +267,7 @@ NULL
 #' @export
 #' @importFrom googledrive drive_ls drive_mkdir drive_upload
 #' @importFrom purrr map2 map
-#' @importFrom readr str_replace
+#' @importFrom stringr str_replace
 
 processedDataUpload <- function(projectName, ...) {
   data <- list(...)
