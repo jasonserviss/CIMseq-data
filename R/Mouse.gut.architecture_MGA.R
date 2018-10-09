@@ -2,7 +2,7 @@
 #'
 #' @title Counts data from the GFP-Lgr5 mouse small intestine and colon.
 #' @docType data
-#' @name countsMgfp
+#' @name MGA.Counts
 #' @format Matrix containing counts with:
 #' \describe{
 #' \item{rownames}{Gene names}
@@ -10,15 +10,15 @@
 #' }
 #' @keywords datasets
 #' @examples
-#' data(countsMgfp)
+#' data(MGA.Counts)
 #'
-"countsMgfp"
+"MGA.Counts"
 
 #' Counts, ERCC, and metadata from the GFP-Lgr5 mouse small intestine and colon.
 #'
 #' @title ERCC counts data from the GFP-Lgr5 mouse small intestine and colon.
 #' @docType data
-#' @name countsMgfpERCC
+#' @name MGA.CountsERCC
 #' @format Matrix containing ERCC counts with:
 #' \describe{
 #' \item{rownames}{Gene names}
@@ -26,28 +26,18 @@
 #' }
 #' @keywords datasets
 #' @examples
-#' data(countsMgfpERCC)
+#' data(MGA.CountsERCC)
 #'
-"countsMgfpERCC"
+"MGA.CountsERCC"
 
 #' Counts, ERCC, and metadata from the GFP-Lgr5 mouse small intestine and colon.
 #'
 #' @title Metadata from the GFP-Lgr5 mouse small intestine and colon.
 #' @docType data
-#' @name countsMgfpMeta
-#' @format Tibble with:
-#' \describe{
-#' \item{sample}{Sample ID}
-#' \item{plate}{Plate ID}
-#' \item{row}{Row position in plate}
-#' \item{column}{Column position in plate}
-#' \item{GFP}{Samples GFP status}
-#' \item{mouseID}{mouse ID}
-#' \item{tissue}{tissue from which the sample was derived}
-#' \item{cellNumber}{Indicates if sample is a single cell or multiple cells}
-#' }
+#' @name MGA.Meta
+#' @format Tibble
 #' @keywords datasets
 #' @examples
-#' data(countsMgfpMeta)
+#' data(MGA.Meta)
 #'
-"countsMgfpMeta"
+"MGA.Meta"

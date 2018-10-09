@@ -1,12 +1,13 @@
 #run from package root
-#source('./inst/rawData/countsSorted2/Sorted.multiplets.R')
+#source('inst/rawData/countsMgfp/Mouse.gut.architecture.R')
 
 packages <- c("sp.scRNAseqData", "EngeMetadata", "dplyr")
 purrr::walk(packages, library, character.only = TRUE)
 rm(packages)
 
-projectName <- "Sorted.multiplets"
-cat(paste0('Processing', projectName, '\n'))
+projectName <- "Mouse.gut.architecture_MGA"
+shortName <- "MGA"
+cat(paste0('Processing ', projectName, '\n'))
 
 googledrive::drive_auth(oauth_token = "inst/extData/gd.rds")
 Meta <- getMetadata(projectName)
@@ -17,34 +18,32 @@ if("Missing" %in% colnames(Meta)) {
 }
 
 countData <- getCountsData(projectName)
+colnames(countData) <- renameMgfpSamples(colnames(countData))
 
 #move genes to rownames
 countData <- moveGenesToRownames(countData)
 
-#remove .htseq suffix
-if(any(grepl("htseq", colnames(countData)))) countData <- removeHTSEQsuffix(countData)
-
 #label singlets and multiplets ids should include SINGLET samples only
 singlets <- Meta[Meta$cellNumber == "Singlet", "sample"][[1]]
 singlets <- gsub("^..(.*)", "\\1", singlets)
-counts <- labelSingletsAndMultiplets(countData, singlets)
+countData <- labelSingletsAndMultiplets(countData, singlets)
 
 #extract ERCC
-ercc <- detectERCCreads(counts)
-countsERCC <- counts[ercc, ]
-counts <- counts[!ercc, ]
+ercc <- detectERCCreads(countData)
+CountsERCC <- countData[ercc, ]
+Counts <- countData[!ercc, ]
 
 #remove non-genes
-counts <- counts[!detectNonGenes(counts), ]
-namesPreFilter <- colnames(counts)
+Counts <- Counts[!detectNonGenes(Counts), ]
 
+#filter counts
 data <- filterCountsData(
-  counts, countsERCC, geneMinCount = 0, cellMinCount = 4e4, geneName = "ACTB",
+  Counts, CountsERCC, geneMinCount = 0, cellMinCount = 1e4, geneName = "Actb",
   quantileCut = 0.01, percentile = 0.99
 )
 
 #check all count samples in meta and vice versa
-c1 <- all(!Meta$sample %in% namesPreFilter)
+c1 <- all(!Meta$sample %in% colnames(Counts))
 c2 <- all(!colnames(data[[1]]) %in% Meta$sample)
 if(c1 & c2) {
   stop("all counts data not present in meta data")

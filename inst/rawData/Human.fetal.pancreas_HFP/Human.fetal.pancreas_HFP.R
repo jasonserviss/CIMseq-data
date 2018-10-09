@@ -1,14 +1,20 @@
 #run from package root
-#source('inst/rawData/countsMgfp/aom.dss.mouse.R')
+#source('inst/rawData/fetalPancreas/fetalPancreasCounts.R')
 
 packages <- c("sp.scRNAseqData", "EngeMetadata", "dplyr")
 purrr::walk(packages, library, character.only = TRUE)
 rm(packages)
 
-projectName <- "aom.dss.mouse"
+projectName <- "Human.fetal.pancreas_HFP"
+shortName <- "HFP"
 cat(paste0('Processing ', projectName, '\n'))
 
+#fetalPancreasCounts
+#Should be 131 singlets and 69 multiplets.
+#Note: I never got the raw unfiltered counts.txt file for this from Martin.
+
 googledrive::drive_auth(oauth_token = "inst/extData/gd.rds")
+
 Meta <- getMetadata(projectName)
 if("Missing" %in% colnames(Meta)) {
   Meta <- Meta %>%
@@ -16,10 +22,8 @@ if("Missing" %in% colnames(Meta)) {
     select(-Missing)
 }
 
+#read counts data
 countData <- getCountsData(projectName)
-
-#move genes to rownames
-countData <- moveGenesToRownames(countData)
 
 #label singlets and multiplets ids should include SINGLET samples only
 singlets <- Meta[Meta$cellNumber == "Singlet", "sample"][[1]]
@@ -34,23 +38,12 @@ Counts <- countData[!ercc, ]
 #remove non-genes
 Counts <- Counts[!detectNonGenes(Counts), ]
 
-namesPreFilter <- colnames(Counts)
-
-data <- filterCountsData(
-  Counts, CountsERCC, geneMinCount = 0, cellMinCount = 1e4, geneName = "Actb",
-  quantileCut = 0.01, percentile = 0.99
-)
-
 #check all count samples in meta and vice versa
-c1 <- all(!Meta$sample %in% namesPreFilter)
-c2 <- all(!colnames(data[[1]]) %in% Meta$sample)
+c1 <- all(!Meta$sample %in% colnames(Counts))
+c2 <- all(!colnames(Counts) %in% Meta$sample)
 if(c1 & c2) {
   stop("all counts data not present in meta data")
 }
-
-#rename
-Counts <- data[[1]]
-CountsERCC <- data[[2]]
 
 #save .rda
 saveRDA(projectName, Counts, CountsERCC, Meta)

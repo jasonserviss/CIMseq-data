@@ -9,7 +9,7 @@
 #'
 #' @title Counts data from sorted multiplets; experiment 2.
 #' @docType data
-#' @name countsSorted2
+#' @name SCM.counts
 #' @format Two matrices, containing counts and ERCC counts, with:
 #' \describe{
 #' \item{rownames}{Gene names}
@@ -17,8 +17,8 @@
 #' }
 #' @keywords datasets
 #' @examples
-#' data(countsSorted2)
-"countsSorted2"
+#' data(SCM.counts)
+"SCM.counts"
 
 #' Counts, ERCC, and metadata for sorted cell lines.
 #'
@@ -31,7 +31,7 @@
 #'
 #' @title ERCC counts data from sorted multiplets; experiment 2.
 #' @docType data
-#' @name countsSortedERCC2
+#' @name SCM.countsERCC
 #' @format Matrix containing ERCC counts, with:
 #' \describe{
 #' \item{rownames}{Gene names}
@@ -39,9 +39,9 @@
 #' }
 #' @keywords datasets
 #' @examples
-#' data(countsSortedERCC2)
+#' data(SCM.countsERCC)
 #'
-"countsSortedERCC2"
+"SCM.countsERCC"
 
 #' Counts, ERCC, and metadata for sorted cell lines.
 #'
@@ -54,17 +54,9 @@
 #'
 #' @title Counts data from sorted multiplets; experiment 2.
 #' @docType data
-#' @name countsSortedMeta2
-#' @format Two matrices, containing counts and ERCC counts, with:
-#' \describe{
-#' \item{sample}{sample ID}
-#' \item{plate}{plate ID}
-#' \item{row}{Row position in plate}
-#' \item{column}{Column position in plate}
-#' \item{cellNumber}{Indicates if sample is a single cell or multiple cells}
-#' \item{cellTypes}{Indicates samples cell types}
-#' }
+#' @name SCM.Meta
+#' @format Tibble
 #' @keywords datasets
 #' @examples
-#' data(countsSortedMeta2)
-"countsSortedMeta2"
+#' data(SCM.Meta)
+"SCM.Meta"

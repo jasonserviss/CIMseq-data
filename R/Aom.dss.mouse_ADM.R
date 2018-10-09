@@ -2,7 +2,7 @@
 #'
 #' @title Counts, ERCC, and metadata from the AOM/DSS mouse.
 #' @docType data
-#' @name countsAomdss
+#' @name ADM.Counts
 #' @format Matrix containing counts with:
 #' \describe{
 #' \item{rownames}{Gene names}
@@ -10,15 +10,15 @@
 #' }
 #' @keywords datasets
 #' @examples
-#' data(countsAomdss)
+#' data(ADM.Counts)
 #'
-"countsAomdss"
+"ADM.Counts"
 
 #' Counts, ERCC, and metadata from the AOM/DSS mouse.
 #'
 #' @title Counts, ERCC, and metadata from the AOM/DSS mouse.
 #' @docType data
-#' @name countsAomdssERCC
+#' @name ADM.CountsERCC
 #' @format Matrix containing ERCC counts with:
 #' \describe{
 #' \item{rownames}{Gene names}
@@ -26,18 +26,18 @@
 #' }
 #' @keywords datasets
 #' @examples
-#' data(countsAomdssERCC)
+#' data(ADM.CountsERCC)
 #'
-"countsAomdssERCC"
+"ADM.CountsERCC"
 
 #' Counts, ERCC, and metadata from the AOM/DSS mouse.
 #'
 #' @title Counts, ERCC, and metadata from the AOM/DSS mouse.
 #' @docType data
-#' @name countsAomdssMeta
+#' @name ADM.Meta
 #' @format Tibble with:
 #' @keywords datasets
 #' @examples
-#' data(countsAomdssMeta)
+#' data(ADM.Meta)
 #'
-"countsAomdssMeta"
+"ADM.Meta"

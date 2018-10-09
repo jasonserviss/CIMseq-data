@@ -6,7 +6,8 @@ packages <- c("sp.scRNAseqData", "EngeMetadata", "dplyr")
 purrr::walk(packages, library, character.only = TRUE)
 rm(packages)
 
-projectName <- "Regev.small.intestine"
+projectName <- "Regev.mouse.small.intestine_RSI"
+shortName <- "RSI"
 cat(paste0('Processing ', projectName, '\n'))
 
 googledrive::drive_auth(oauth_token = "inst/extData/gd.rds")

@@ -227,11 +227,13 @@ filterCountsData <- function(
 #'
 NULL
 #' @export
+#' @importFrom srtingr str_replace
 
 saveRDA <- function(projectName, ...) {
   data <- list(...)
+  shortName <- str_replace(projectName, ".*_(.*)", "\\1")
   names <- sapply(substitute(list(...))[-1], deparse)
-  names(data) <- paste0(projectName, names)
+  names(data) <- paste(shortName, names, sep = ".")
 
   #reassign the variable name from "counts" etc. to "projectName Counts" etc.
   for(i in 1:length(data)) {
@@ -265,16 +267,22 @@ NULL
 #' @export
 #' @importFrom googledrive drive_ls drive_mkdir drive_upload
 #' @importFrom purrr map2 map
+#' @importFrom readr str_replace
 
 processedDataUpload <- function(projectName, ...) {
   data <- list(...)
-  names <- paste0(projectName, sapply(substitute(list(...))[-1], deparse))
+  shortName <- str_replace(projectName, ".*_(.*)", "\\1")
+  names <- paste(
+    shortName,
+    sapply(substitute(list(...))[-1], deparse),
+    sep = "."
+  )
   localPath <- tempdir()
 
   #check for processed_data dir and create if needed
   subfolders <- googledrive::drive_ls(file.path('data', projectName))$name
   if(!"processed_data" %in% subfolders) {
-    googledrive::drive_mkdir("processed_data", projectName)
+    googledrive::drive_mkdir("processed_data", file.path('data', projectName))
   }
 
   #save objects locally

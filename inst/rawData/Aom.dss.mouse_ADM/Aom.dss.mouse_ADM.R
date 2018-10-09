@@ -1,11 +1,12 @@
 #run from package root
-#source('inst/rawData/countsMgfp/Mouse.gut.architecture.R')
+#source('inst/rawData/countsMgfp/aom.dss.mouse.R')
 
 packages <- c("sp.scRNAseqData", "EngeMetadata", "dplyr")
 purrr::walk(packages, library, character.only = TRUE)
 rm(packages)
 
-projectName <- "Mouse.gut.architecture"
+projectName <- "Aom.dss.mouse_ADM"
+shortName <- "ADM"
 cat(paste0('Processing ', projectName, '\n'))
 
 googledrive::drive_auth(oauth_token = "inst/extData/gd.rds")
@@ -17,7 +18,6 @@ if("Missing" %in% colnames(Meta)) {
 }
 
 countData <- getCountsData(projectName)
-colnames(countData) <- renameMgfpSamples(colnames(countData))
 
 #move genes to rownames
 countData <- moveGenesToRownames(countData)
@@ -35,14 +35,15 @@ Counts <- countData[!ercc, ]
 #remove non-genes
 Counts <- Counts[!detectNonGenes(Counts), ]
 
-#filter counts
+namesPreFilter <- colnames(Counts)
+
 data <- filterCountsData(
   Counts, CountsERCC, geneMinCount = 0, cellMinCount = 1e4, geneName = "Actb",
   quantileCut = 0.01, percentile = 0.99
 )
 
 #check all count samples in meta and vice versa
-c1 <- all(!Meta$sample %in% colnames(Counts))
+c1 <- all(!Meta$sample %in% namesPreFilter)
 c2 <- all(!colnames(data[[1]]) %in% Meta$sample)
 if(c1 & c2) {
   stop("all counts data not present in meta data")
