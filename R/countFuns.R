@@ -555,3 +555,25 @@ renameMgfpSamples <- function(oldNames) {
   plate
 }
 
+#' Reformat wells
+#'
+#' Reformats wells named e.g. E2 to E02.
+#'
+#' @name reformatWell
+#' @rdname reformatWell
+#' @param names character; A character vector of the old names. Names that are
+#' already in the new nomenclature will not be effected.
+#' @return A character vector of the updated names.
+#' @author Jason Serviss
+#'
+NULL
+#' @export
+#' @importFrom stringr str_replace str_extract
+
+reformatWell <- function(names){
+  base <- str_replace(names, "(.*)\\.[^\\.]*$", "\\1")
+  pos <- paste0(".", str_extract(names, "[^.]+$"))
+  posidx <- which(nchar(pos) == 3)
+  pos[posidx] <- str_replace(pos[posidx], "(..)(.)", "\\10\\2")
+  paste0(base, pos)
+}
