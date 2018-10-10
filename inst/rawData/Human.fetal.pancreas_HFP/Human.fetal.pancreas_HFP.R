@@ -38,6 +38,12 @@ Counts <- countData[!ercc, ]
 #remove non-genes
 Counts <- Counts[!detectNonGenes(Counts), ]
 
+#add filtered column to Meta
+Meta <- dplyr::mutate(Meta, filtered = dplyr::if_else(
+  sample %in% colnames(Counts),
+  FALSE, TRUE
+))
+
 #check all count samples in meta and vice versa
 c1 <- all(!Meta$sample %in% colnames(Counts))
 c2 <- all(!colnames(Counts) %in% Meta$sample)

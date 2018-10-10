@@ -42,6 +42,12 @@ data <- filterCountsData(
   quantileCut = 0.01, percentile = 0.99
 )
 
+#add filtered column to Meta
+Meta <- dplyr::mutate(Meta, filtered = dplyr::if_else(
+  sample %in% colnames(data[[1]]),
+  FALSE, TRUE
+))
+
 #check all count samples in meta and vice versa
 c1 <- all(!Meta$sample %in% colnames(Counts))
 c2 <- all(!colnames(data[[1]]) %in% Meta$sample)
