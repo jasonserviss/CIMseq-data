@@ -496,7 +496,7 @@ detectLowQualityCells.ERCCfrac <- function(
 
   #calculate percentile
   p.cut <- quantile(frac.ercc, probs = percentile, na.rm = TRUE)
-  bool <- frac.ercc < p.cut
+  bool <- frac.ercc <= p.cut
   output[bool] <- TRUE
 
   message <- paste0(
