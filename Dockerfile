@@ -20,11 +20,11 @@ RUN Rscript -e "source('https://raw.githubusercontent.com/jasonserviss/install/m
 
 # Clone and install EngeMetadata
 RUN git clone https://github.com/EngeLab/EngeMetadata.git /home/EngeMetadata
-RUN Rscript -e "devtools::install('/home/EngeMetadata')"
+RUN Rscript -e "devtools::install('/home/EngeMetadata', dependencies = FALSE)"
 
 # Clone and install sp.scRNAseqData
 RUN git clone https://github.com/jasonserviss/sp.scRNAseqData.git /home/sp.scRNAseqData
-RUN Rscript -e "devtools::install('/home/sp.scRNAseqData')"
+RUN Rscript -e "devtools::install('/home/sp.scRNAseqData', dependencies = FALSE)"
 
 # Run data scripts
 WORKDIR /home/sp.scRNAseqData
