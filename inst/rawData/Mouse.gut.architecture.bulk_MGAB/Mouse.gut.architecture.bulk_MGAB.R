@@ -5,8 +5,8 @@ packages <- c("sp.scRNAseqData", "EngeMetadata", "dplyr")
 purrr::walk(packages, library, character.only = TRUE)
 rm(packages)
 
-projectName <- "Mouse.gut.architecture_MGA"
-shortName <- "MGA"
+projectName <- "Mouse.gut.architecture.bulk_MGAB"
+shortName <- "MGAB"
 cat(paste0('Processing ', projectName, '\n'))
 
 googledrive::drive_auth(oauth_token = "inst/extData/gd.rds")
@@ -18,15 +18,9 @@ if("Missing" %in% colnames(Meta)) {
 }
 
 countData <- getCountsData(projectName)
-colnames(countData) <- renameMgfpSamples(colnames(countData))
 
 #move genes to rownames
 countData <- moveGenesToRownames(countData)
-
-#label singlets and multiplets ids should include SINGLET samples only
-singlets <- Meta[Meta$cellNumber == "Singlet", "sample"][[1]]
-singlets <- gsub("^..(.*)", "\\1", singlets)
-countData <- labelSingletsAndMultiplets(countData, singlets)
 
 #extract ERCC
 ercc <- detectERCCreads(countData)
@@ -38,8 +32,8 @@ Counts <- Counts[!detectNonGenes(Counts), ]
 
 #filter counts
 data <- filterCountsData(
-  Counts, CountsERCC, geneMinCount = 0, cellMinCount = 1.8e4, geneName = "Actb",
-  quantileCut = 0.01, percentile = 0.99
+  Counts, CountsERCC, geneMinCount = 0, cellMinCount = 1e5, geneName = "Actb",
+  quantileCut = 0.01, percentile = 1
 )
 
 #add filtered column to Meta
