@@ -43,11 +43,11 @@ Meta <- dplyr::mutate(Meta, filtered = dplyr::if_else(
 ))
 
 #check all count samples in meta and vice versa
-c1 <- all(!Meta$sample %in% colnames(Counts))
-c2 <- all(!colnames(data[[1]]) %in% Meta$sample)
-if(c1 & c2) {
-  stop("all counts data not present in meta data")
-}
+#c1 <- all(!Meta$sample %in% colnames(Counts))
+#c2 <- all(!colnames(data[[1]]) %in% Meta$sample)
+#if(c1 & c2) {
+#  stop("all counts data not present in meta data")
+#}
 
 #rename
 Counts <- data[[1]]
