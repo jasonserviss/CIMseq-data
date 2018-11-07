@@ -33,7 +33,7 @@ Counts <- Counts[!detectNonGenes(Counts), ]
 #filter counts
 data <- filterCountsData(
   Counts, CountsERCC, geneMinCount = 0, cellMinCount = 1e5, geneName = "Actb",
-  quantileCut = 0.01, percentile = 1
+  quantileCut.hk = 0.01, quantileCut.ercc = 1
 )
 
 #add filtered column to Meta

@@ -40,7 +40,7 @@ counts <- countData[!detectNonGenes(counts), ]
 #filter bad genes and cells
 data <- filterCountsData(
   counts, countsERCC, geneMinCount = 0, cellMinCount = 1e4, geneName = "Actb",
-  quantileCut = 0.01, percentile = 0.99
+  quantileCut.hk = 0.01, quantileCut.ercc = 0.99
 )
 
 #add filtered column to Meta
