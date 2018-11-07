@@ -109,7 +109,7 @@ NULL
 filterCountsData <- function(
   counts, countsERCC,
   filters = c("genes", "totalCounts", "ERCCfrac", "housekeeping"),
-  geneMinCount, cellMinCount, geneName, quantileCut, percentile
+  geneMinCount, cellMinCount, geneName, quantileCut.hk, quantileCut.ercc
 ){
   #remove low quality genes
   if("genes" %in% filters) {
@@ -130,7 +130,7 @@ filterCountsData <- function(
     lqc.housekeeping <- detectLowQualityCells.housekeeping(
       counts,
       geneName = geneName,
-      quantileCut = quantileCut
+      quantileCut = quantileCut.hk
     )
   }
 
@@ -138,7 +138,7 @@ filterCountsData <- function(
     lqc.ERCCfrac <- detectLowQualityCells.ERCCfrac(
       counts,
       countsERCC,
-      percentile = percentile
+      quantileCut = quantileCut.ercc
     )
   }
 

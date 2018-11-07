@@ -10,8 +10,8 @@ rownames and sample names as colnames.}
 \item{geneName}{character; The gene name to use for the quantile cutoff. This
 must be present in the rownames of the counts argument. Default is ACTB.}
 
-\item{quantile.cut}{numeric; This indicates probability at which the quantile
-cutoff will be calculated using the normal distribution. Default = 0.01.}
+\item{quantileCut}{numeric; This indicates probability at which the quantile
+cutoff will be calculated using the normal distribution. Default = 0.99.}
 }
 \value{
 A logical vector with length = ncol(counts) that is TRUE when the

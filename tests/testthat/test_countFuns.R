@@ -185,7 +185,7 @@ test_that("check detectLowQualityCells.ERCCfrac", {
   names(expected) <- LETTERS[1:11]
 
   #run function
-  output <- detectLowQualityCells.ERCCfrac(input, ercc, percentile = 0.99)
+  output <- detectLowQualityCells.ERCCfrac(input, ercc, quantileCut = 0.99)
 
   #test
   expect_identical(output, expected)

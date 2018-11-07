@@ -384,7 +384,7 @@ detectLowQualityCells.totalCounts <- function(
 #' rownames and sample names as colnames.
 #' @param geneName character; The gene name to use for the quantile cutoff. This
 #' must be present in the rownames of the counts argument. Default is ACTB.
-#' @param quantile.cut numeric; This indicates probability at which the quantile
+#' @param quantileCut numeric; This indicates probability at which the quantile
 #' cutoff will be calculated using the normal distribution. Default = 0.01.
 #' @return A logical vector with length = ncol(counts) that is TRUE when the
 #' counts data.frame column contains a sample with meeting the criteria specified
@@ -463,8 +463,8 @@ detectLowQualityCells.housekeeping <- function(
 #' rownames and sample names as colnames.
 #' @param geneName character; The gene name to use for the quantile cutoff. This
 #' must be present in the rownames of the counts argument. Default is ACTB.
-#' @param quantile.cut numeric; This indicates probability at which the quantile
-#' cutoff will be calculated using the normal distribution. Default = 0.01.
+#' @param quantileCut numeric; This indicates probability at which the quantile
+#' cutoff will be calculated using the normal distribution. Default = 0.99.
 #' @return A logical vector with length = ncol(counts) that is TRUE when the
 #' counts data.frame column contains a sample with meeting the criteria specified
 #' by the arguments.
@@ -483,7 +483,7 @@ NULL
 detectLowQualityCells.ERCCfrac <- function(
   counts,
   ercc,
-  percentile = 0.99
+  quantileCut = 0.99
 ){
   #setup output vector
   output <- vector(mode = "logical", length = ncol(counts))
@@ -494,8 +494,10 @@ detectLowQualityCells.ERCCfrac <- function(
   cs.ercc <- colSums(ercc)
   frac.ercc <-  cs.ercc / (cs.ercc + cs)
 
-  #calculate percentile
-  p.cut <- quantile(frac.ercc, probs = percentile, na.rm = TRUE)
+  #calculate normal approximation and cut
+  m <- mean(log2(frac.ercc), na.rm = TRUE)
+  sd <- sd(log2(frac.ercc), na.rm = TRUE)
+  p.cut <- 2^qnorm(quantileCut, m, sd)
   bool <- frac.ercc <= p.cut
   output[bool] <- TRUE
 
