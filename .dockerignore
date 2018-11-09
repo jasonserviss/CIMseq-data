@@ -1,0 +1,7 @@
+#Try excluding these directories to improve build time https://docs.docker.com/engine/reference/builder/#dockerignore-file
+*/R*
+*/data*
+*/inst*
+*/man*
+*/tests*
+*/vignette*
