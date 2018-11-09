@@ -493,13 +493,19 @@ detectLowQualityCells.ERCCfrac <- function(
   cs <- colSums(counts)
   cs.ercc <- colSums(ercc)
   frac.ercc <-  cs.ercc / (cs.ercc + cs)
+  frac.ercc[is.na(frac.ercc)] <- 0 #when cs == 0
+  l.frac.ercc <- log2(frac.ercc)
 
   #calculate normal approximation and cut
-  m <- mean(log2(frac.ercc), na.rm = TRUE)
-  sd <- sd(log2(frac.ercc), na.rm = TRUE)
-  p.cut <- 2^qnorm(quantileCut, m, sd)
-  bool <- frac.ercc <= p.cut
-  output[bool] <- TRUE
+  #median less sensitive to outliers
+  #is.infinite needed for when cs.ercc == 0
+  m <- median(l.frac.ercc[!is.infinite(l.frac.ercc)], na.rm = TRUE)
+  sd <- sd(l.frac.ercc[!is.infinite(l.frac.ercc)], na.rm = TRUE)
+  p.cut.h <- 2^qnorm(quantileCut, m, sd)
+  p.cut.l <- 2^qnorm(1 - quantileCut, m, sd)
+  bool.h <- frac.ercc <= p.cut.h
+  bool.l <- frac.ercc >= p.cut.l
+  output[bool.h & bool.l] <- TRUE
 
   message <- paste0(
     "Detected ", sum(!output), " low quality cells out of ", ncol(counts),
