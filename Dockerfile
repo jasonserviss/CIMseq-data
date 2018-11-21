@@ -16,7 +16,7 @@ RUN  rm -f /var/lib/dpkg/available \
 # R dependencies
 RUN Rscript -e "install.packages(c('devtools','knitr','rmarkdown','shiny','RCurl'), repos = 'https://cran.rstudio.com')"
 
-RUN Rscript -e "source('https://raw.githubusercontent.com/jasonserviss/install/master/install_cran.R');install_cran(c('rlang/0.2.1', 'openxlsx/4.0.17', 'googledrive/0.1.1', 'dplyr/0.7.7', 'stringr/1.3.1', 'tibble/1.4.2', 'readr/1.1.1', 'purrr/0.2.5', 'lubridate/1.7.4', 'readxl/1.1.0', 'tidyr/0.8.1'))"
+RUN Rscript -e "source('https://raw.githubusercontent.com/jasonserviss/install/master/install_cran.R');install_cran(c('rlang/0.3.0.1', 'openxlsx/4.1.0', 'googledrive/0.1.2', 'dplyr/0.7.8', 'stringr/1.3.1', 'tibble/1.4.2', 'readr/1.1.1', 'purrr/0.2.5', 'lubridate/1.7.4', 'readxl/1.1.0', 'tidyr/0.8.2'))"
 
 # Clone and install EngeMetadata
 RUN git clone https://github.com/EngeLab/EngeMetadata.git /home/EngeMetadata
