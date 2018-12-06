@@ -41,7 +41,7 @@ namesPreFilter <- colnames(counts)
 
 data <- filterCountsData(
   counts, countsERCC, geneMinCount = 0, cellMinCount = 4e4, geneName = "ACTB",
-  quantileCut.hk = 0.01, quantileCut.ercc = 0.99
+  quantileCut.hk = 0.01, quantileCut.ercc = 0.95
 )
 
 #add filtered column to Meta
