@@ -1,7 +1,7 @@
 #run from package root
 #source('inst/rawData/fetalPancreas/fetalPancreasCounts.R')
 
-packages <- c("CIMseq-data", "EngeMetadata", "dplyr")
+packages <- c("CIMseq.data", "EngeMetadata", "dplyr")
 purrr::walk(packages, library, character.only = TRUE)
 rm(packages)
 

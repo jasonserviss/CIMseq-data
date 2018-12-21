@@ -2,7 +2,7 @@
 #source('./inst/rawData/countsRegev/Regev.small.intestine.R')
 #GSE92332
 
-packages <- c("CIMseq-data", "EngeMetadata", "dplyr")
+packages <- c("CIMseq.data", "EngeMetadata", "dplyr")
 purrr::walk(packages, library, character.only = TRUE)
 rm(packages)
 
