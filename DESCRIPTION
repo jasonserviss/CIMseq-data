@@ -1,5 +1,5 @@
-Package: sp.scRNAseqData
-Title: Data and processing functions for the sp.scRNAseqTesting package
+Package: CIMseq-data
+Title: Data and processing functions for the CIMseq-data package
 Version: 0.0.1.2
 Authors@R: c(
     person("Jason T.", "Serviss", email = "Jason.serviss@ki.se", role = c("aut", "cre"), comment = c(ORCID = 0000-0002-5778-7014)))

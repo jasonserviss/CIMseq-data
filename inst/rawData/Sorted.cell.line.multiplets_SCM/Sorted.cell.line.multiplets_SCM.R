@@ -1,7 +1,7 @@
 #run from package root
 #source('./inst/rawData/countsSorted2/Sorted.multiplets.R')
 
-packages <- c("sp.scRNAseqData", "EngeMetadata", "dplyr")
+packages <- c("CIMseq-data", "EngeMetadata", "dplyr")
 purrr::walk(packages, library, character.only = TRUE)
 rm(packages)
 
