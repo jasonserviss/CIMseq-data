@@ -18,7 +18,7 @@ processRaw <- function(
   if(!is.null(ignore)) paths <- paths[!paths %in% ignore]
   funNames <- gsub(".*_(.*)\\.R", "\\1", basename(paths))
 
-  purrr::map2(paths, funNames, function(p, fn) {
+  trash <- purrr::map2(paths, funNames, function(p, fn) {
     source(p)
     c.fn <- get(fn)
     c.fn(upload = upload, save = save)
