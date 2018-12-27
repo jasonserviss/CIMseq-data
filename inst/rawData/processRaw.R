@@ -24,5 +24,6 @@ processRaw <- function(
     source(p)
     c.fn <- get(fn)
     c.fn(upload = upload, save = save)
+    gc()
   })
 }
