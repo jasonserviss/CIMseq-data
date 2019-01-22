@@ -23,9 +23,9 @@ RUN git clone https://github.com/EngeLab/EngeMetadata.git /home/EngeMetadata
 RUN Rscript -e "devtools::install('/home/EngeMetadata', dependencies = FALSE)"
 
 # Clone and install sp.scRNAseqData
-RUN git clone https://github.com/jasonserviss/sp.scRNAseqData.git /home/sp.scRNAseqData
-RUN Rscript -e "devtools::install('/home/sp.scRNAseqData', dependencies = FALSE)"
+RUN git clone https://github.com/jasonserviss/CIMseq.data.git /home/CIMseq.data
+RUN Rscript -e "devtools::install('/home/CIMseq.data', dependencies = FALSE)"
 
 # Run data scripts
-WORKDIR /home/sp.scRNAseqData
+WORKDIR /home/CIMseq.data
 
