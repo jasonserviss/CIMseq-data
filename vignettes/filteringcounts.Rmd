@@ -14,7 +14,7 @@ editor_options:
 An example of how counts are typically filtered using the package functions.
 
 ```{r}
-library(sp.scRNAseqData)
+library(CIMseq.data)
 library(printr)
 ```
 
@@ -22,7 +22,7 @@ Load the counts data.
 This would usually be done with the read.table function but here we use a small test dataset that represents typical input of HTSeq generated counts.
 
 ```{r}
-sp.scRNAseqData::testingCounts
+data(testingCounts, package = "CIMseq.data")
 ```
 
 Move the gene names to rownames.

@@ -20,9 +20,9 @@ Imports:
     purrr (>= 0.2.5),
     EngeMetadata (>= 0.1.2)
 Suggests: 
-    testthat,
-    knitr,
-    rmarkdown,
-    printr
+    testthat (>= 2.0.1),
+    knitr (>= 1.21),
+    rmarkdown (>= 1.11),
+    printr (>= 0.1)
 VignetteBuilder: knitr
 Remotes: EngeLab/EngeMetadata
