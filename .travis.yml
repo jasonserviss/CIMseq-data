@@ -4,7 +4,7 @@ language: r
 r:
  - 3.5.2
  - release
- - devel≈ç
+ - devel
 package: cache
 r_build_args: " --no-resave-data"
 r_check_args: "--timings"
