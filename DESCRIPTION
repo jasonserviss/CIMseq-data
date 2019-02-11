@@ -1,6 +1,6 @@
 Package: CIMseq.data
 Title: Data and processing functions for the CIMseq.data package
-Version: 0.0.1.3
+Version: 0.0.1.4
 Authors@R: c(
     person("Jason T.", "Serviss", email = "Jason.serviss@ki.se", role = c("aut", "cre"), comment = c(ORCID = 0000-0002-5778-7014)))
 Author: Jason T. Serviss

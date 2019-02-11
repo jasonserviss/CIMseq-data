@@ -39,28 +39,34 @@ SCM <- function(upload = TRUE, save = TRUE) {
   #remove non-genes
   counts <- counts[!detectNonGenes(counts), ]
   namesPreFilter <- colnames(counts)
-
-  data <- filterCountsData(
-    counts, countsERCC, geneMinCount = 0, cellMinCount = 4e4, geneName = "ACTB",
-    quantileCut.hk = 0.01, quantileCut.ercc = 0.95
+  
+  #filter data
+  sng <- grepl("^s", colnames(counts))
+  data.s <- filterCountsData(
+    counts[, sng], countsERCC[, sng], geneMinCount = 0, cellMinCount = 4e4, 
+    geneName = "ACTB", quantileCut.hk = 0.01, quantileCut.ercc = 0.95
   )
-
+  data.m <- filterCountsData(
+    counts[, !sng], countsERCC[, !sng], geneMinCount = 0, cellMinCount = 4.5e4, 
+    geneName = "ACTB", quantileCut.hk = 0.01, quantileCut.ercc = 0.95
+  )
+  genes <- intersect(rownames(data.s[[1]]), rownames(data.m[[1]]))
+  samples <- c(colnames(data.s[[1]]), colnames(data.m[[1]]))
   #add filtered column to Meta
   Meta <- dplyr::mutate(Meta, filtered = dplyr::if_else(
-    sample %in% colnames(data[[1]]),
-    FALSE, TRUE
+    sample %in% samples, FALSE, TRUE
   ))
 
   #check all count samples in meta and vice versa
   c1 <- all(!Meta$sample %in% namesPreFilter)
-  c2 <- all(!colnames(data[[1]]) %in% Meta$sample)
+  c2 <- all(!samples %in% Meta$sample)
   if(c1 & c2) {
     stop("all counts data not present in meta data")
   }
 
   #rename
-  Counts <- data[[1]]
-  CountsERCC <- data[[2]]
+  Counts <- cbind(data.s[[1]][genes, ], data.m[[1]][genes, ])
+  CountsERCC <- cbind(data.s[[2]], data.m[[2]])
 
   #save .rda
   if(save) saveRDA(projectName, Counts, CountsERCC, Meta)

@@ -88,23 +88,19 @@ labelSingletsAndMultiplets <- function(data, ids) {
   if(class(data) == "data.frame") {
 
     .dataframeChecks_labelSingletsAndMultiplets(data)
-
     bool <- sapply(ids, function(x) grepl(x, colnames(data)))
     .boolChecks_labelSingletsAndMultiplets(bool)
-
     colnames(data) <- ifelse(
       rowSums(bool) > 0,
       paste("s.", colnames(data), sep = ""),
       paste("m.", colnames(data), sep = "")
     )
-
     return(data)
 
   } else {
 
     bool <- sapply(ids, function(x) grepl(x, data))
     .boolChecks_labelSingletsAndMultiplets(bool)
-
     data <- ifelse(
       rowSums(bool) > 0,
       paste("s.", data, sep = ""),
@@ -120,6 +116,9 @@ labelSingletsAndMultiplets <- function(data, ids) {
   }
   if(!class(data) %in% c("data.frame", "character")) {
     stop("The data argument must be a character vector or data.frame.")
+  }
+  if(any(is.na(ids))) {
+    stop("The ids argument contains NA values.")
   }
 }
 

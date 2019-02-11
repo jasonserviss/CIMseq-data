@@ -1,3 +1,10 @@
+* v.0.0.1.4
+ - QCing multiplets and singlets separate for MGA and SCM
+ - Combining MGA and MGAS
+
+* v.0.0.1.3
+
+
 * v.0.0.1.2
 1a976d79e88a98160cc3cc77eead5880d4186519 : -
 - dividing cell QC into 3 functions
