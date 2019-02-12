@@ -22,7 +22,7 @@ NULL
 getMetadata <- function(projectName) {
   cellNumber <- prefix <- unique_key <- Well <- NULL
   annotationPath <- file.path('data', projectName, 'annotation')
-  plates <- googledrive::drive_ls(annotationPath)$name
+  plates <- googledrive::drive_ls(annotationPath, trashed = FALSE)$name
   meta <- purrr::map_dfr(plates, function(p) {
     EngeMetadata::metadata(p, annotationPath)
   })
