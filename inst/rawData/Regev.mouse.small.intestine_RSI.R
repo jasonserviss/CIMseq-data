@@ -41,9 +41,10 @@ RSI <- function(upload = TRUE, save = TRUE) {
   #filter bad genes and cells
   data <- filterCountsData(
     counts, countsERCC, geneMinCount = 0, cellMinCount = 1e4, geneName = "Actb",
-    quantileCut.hk = 0.01, quantileCut.ercc = 0.99
+    quantileCut.hk = 0.01, filters = c("genes", "totalCounts", "housekeeping")
   )
-
+  #ERCC filter removes > 80% of cells
+  
   #add filtered column to Meta
   Meta <- dplyr::mutate(Meta, filtered = dplyr::if_else(
     sample %in% colnames(data[[1]]),
