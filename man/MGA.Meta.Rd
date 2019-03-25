@@ -3,13 +3,13 @@
 \docType{data}
 \name{MGA.Meta}
 \alias{MGA.Meta}
-\title{Metadata from the GFP-Lgr5 mouse small intestine and colon.}
+\title{Metadata from mouse small intestine and colon scRNAseq.}
 \format{Tibble}
 \usage{
 MGA.Meta
 }
 \description{
-Counts, ERCC, and metadata from the GFP-Lgr5 mouse small intestine and colon.
+Counts, ERCC, and metadata from mouse small intestine and colon scRNAseq.
 }
 \examples{
 data(MGA.Meta)

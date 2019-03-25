@@ -3,7 +3,7 @@
 \docType{data}
 \name{MGA.Counts}
 \alias{MGA.Counts}
-\title{Counts data from the GFP-Lgr5 mouse small intestine and colon.}
+\title{Counts data from mouse small intestine and colon scRNAseq.}
 \format{Matrix containing counts with:
 \describe{
 \item{rownames}{Gene names}
@@ -13,7 +13,7 @@
 MGA.Counts
 }
 \description{
-Counts, ERCC, and metadata from the GFP-Lgr5 mouse small intestine and colon.
+Counts, ERCC, and metadata from mouse small intestine and colon scRNAseq.
 }
 \examples{
 data(MGA.Counts)

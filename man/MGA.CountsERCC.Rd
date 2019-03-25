@@ -3,7 +3,7 @@
 \docType{data}
 \name{MGA.CountsERCC}
 \alias{MGA.CountsERCC}
-\title{ERCC counts data from the GFP-Lgr5 mouse small intestine and colon.}
+\title{ERCC counts data from mouse small intestine and colon scRNAseq.}
 \format{Matrix containing ERCC counts with:
 \describe{
 \item{rownames}{Gene names}
@@ -13,7 +13,7 @@
 MGA.CountsERCC
 }
 \description{
-Counts, ERCC, and metadata from the GFP-Lgr5 mouse small intestine and colon.
+Counts, ERCC, and metadata from mouse small intestine and colon scRNAseq.
 }
 \examples{
 data(MGA.CountsERCC)
