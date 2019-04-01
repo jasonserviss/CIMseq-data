@@ -22,7 +22,8 @@ RUN Rscript -e "source('https://raw.githubusercontent.com/jasonserviss/install/m
 RUN git clone https://github.com/EngeLab/EngeMetadata.git /home/EngeMetadata
 RUN Rscript -e "devtools::install('/home/EngeMetadata', dependencies = FALSE)"
 
-# Clone and install sp.scRNAseqData
+# Clone and install CIMseq.data
+RUN touch /tmp.txt
 RUN git clone https://github.com/jasonserviss/CIMseq.data.git /home/CIMseq.data
 RUN Rscript -e "devtools::install('/home/CIMseq.data', dependencies = FALSE)"
 
