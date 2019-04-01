@@ -18,6 +18,7 @@ TMD <- function(upload = TRUE, save = TRUE) {
       filter(is.na(Missing) | Missing == FALSE) %>%
       select(-Missing)
   }
+  Meta <- mutate(Meta, sample = paste0("s.", str_replace(sample, "(.*)\\..*", "\\1")))
   
   countData <- getCountsData(projectName)
   
@@ -28,6 +29,7 @@ TMD <- function(upload = TRUE, save = TRUE) {
   #countData <- removeHTSEQsuffix(countData)
   
   #annotate all samples as singlets
+  colnames(countData) <- str_replace(colnames(countData), "(.*)\\..*", "\\1")
   colnames(countData) <- paste0("s.", colnames(countData))
   
   #extract ERCC reads
