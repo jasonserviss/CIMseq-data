@@ -5,7 +5,7 @@ Authors@R: c(
     person("Jason T.", "Serviss", email = "Jason.serviss@ki.se", role = c("aut", "cre"), comment = c(ORCID = 0000-0002-5778-7014)))
 Author: Jason T. Serviss
 Description: What the package does (one paragraph).
-Depends: R (>= 3.5.2)
+Depends: R (>= 2.10)
 License: GPL-3
 Encoding: UTF-8
 LazyData: true
